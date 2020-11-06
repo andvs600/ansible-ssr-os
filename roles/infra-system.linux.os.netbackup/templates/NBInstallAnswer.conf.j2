@@ -1,0 +1,4 @@
+{% for server in netbackup_master %}
+SERVER = {{ server }}
+{% endfor %}
+CLIENT_NAME = {{ ansible_fqdn }}

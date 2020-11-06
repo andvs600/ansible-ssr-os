@@ -1,0 +1,2 @@
+#!/bin/bash
+if /usr/bin/test -f /sbin/iptables; then /usr/bin/sudo /sbin/iptables "${@}"; fi;

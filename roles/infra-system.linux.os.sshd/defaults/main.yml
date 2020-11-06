@@ -1,0 +1,5 @@
+---
+user_accounts: no
+sshd_deny_users: 
+- 'smenaptk@10.144.*'
+- 'smenaptk@10.160.*'

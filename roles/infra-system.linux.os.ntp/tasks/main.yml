@@ -1,0 +1,28 @@
+---
+- name: Include task configuration timezone
+  include: timezone.yml
+
+- block:
+    - name: Checking if there are enough variables
+      debug: 
+        msg: "Not enough variables. Only `ntp pool` is specified, `ntp_server` must be set."
+  when: (ntp_pool is defined) and (ntp_servers is undefined)
+  always:
+    - meta: end_host
+  
+- name: Check if ntpd service exists
+  stat: path="/usr/lib/systemd/system/ntpd.service"
+  register: ntpd_service_status
+  tags:
+    - disable_ntpd
+     
+- name: Include task disable ntpd
+  include: ntpd.yml
+  when: ntpd_service_status.stat.exists == True
+  tags:
+    - disable_ntpd    
+
+- name: Include task enable chronyd
+  include: chronyd.yml
+  tags:
+    - enable_chronyd 

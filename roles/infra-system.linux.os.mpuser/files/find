@@ -1,0 +1,10 @@
+#!/bin/bash
+if /usr/bin/test -f /usr/bin/find; then 
+ if [ "$1" == "/usr/sap" ]; then
+  if [ ! -d /usr/sap ]; then
+   echo "find: /usr/sap: No such file or directory";
+  else /usr/bin/sudo /usr/bin/find "${@}";
+  fi;
+ else /usr/bin/sudo /usr/bin/find "${@}";
+ fi;
+fi;

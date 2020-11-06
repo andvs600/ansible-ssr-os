@@ -1,0 +1,9 @@
+[Unit]
+Description=Check update and set environments. For timer.
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/updates.environment
+
+[Install]
+WantedBy=multi-user.target

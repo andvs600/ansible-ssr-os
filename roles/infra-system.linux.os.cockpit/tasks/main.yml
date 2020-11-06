@@ -1,0 +1,53 @@
+---
+- name: Install WebWS CockPit service
+  yum:
+    name: "{{ packages_el7 }}"
+    state: present
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+  tags:
+    - cockpit
+
+- name: Install WebWS CockPit service
+  dnf:
+    name: "{{ packages_el8 }}"
+    state: present
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'
+  tags:
+    - cockpit
+
+- name: Create a directory for the dropdown file with additional content
+  file:
+    path: /etc/systemd/system/cockpit.socket.d
+    state: directory
+  tags:
+    - cockpit
+    
+- name: Add new port ListenStream WebWS CockPit service
+  template:
+    src: listen.conf.j2
+    dest: /etc/systemd/system/cockpit.socket.d/listen.conf
+    owner: root
+    group: root
+    mode: '0600'
+  tags:
+    - cockpit
+    
+- name: Manages SELinux network port type definitions for new port
+  seport: 
+    ports: "{{ websm_port|default('3389') }}"
+    proto: tcp
+    setype: websm_port_t 
+    state: present
+  tags:
+    - cockpit
+    
+- name: Reload systemd | Start and Enable WebWS CockPit service
+  systemd:
+    name: cockpit.socket
+    state: started
+    enabled: yes
+    daemon-reload: yes
+  notify: 
+    - Cockpit_restart
+  tags:
+    - cockpit

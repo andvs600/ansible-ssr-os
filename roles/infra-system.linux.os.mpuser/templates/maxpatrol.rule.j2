@@ -1,0 +1,7 @@
+#{{ ansible_managed }}
+Cmnd_Alias MPROOTCMD = /sbin/fdisk -l, /sbin/fdisk -l [/a-z0-9]*, /sbin/iptables -vnL, /usr/bin/lshal, /usr/sbin/dmidecode, /sbin/iptables-save, /bin/netstat, /usr/sbin/authconfig --test, /sbin/chkconfig --list
+Cmnd_Alias MPFILECMD = /bin/grep, /bin/egrep, /bin/cat, /usr/bin/find *, /bin/ls, /usr/bin/stat, /usr/sbin/lsof, /usr/bin/getfacl, /usr/bin/lsattr
+Cmnd_Alias MPEXCPTNSCMD = !/usr/bin/find *-exec*, !/usr/bin/find *-fprint*, !/usr/bin/find *-ok*
+Cmnd_Alias NOREBOOT = ! /sbin/reboot, ! /sbin/shutdown, ! /usr/bin/bash
+Cmnd_Alias NSU = /usr/bin/su [!-]*, ! /usr/bin/su *root*
+mpuser ALL = (ALL) NOPASSWD: MPROOTCMD, MPFILECMD, MPEXCPTNSCMD, NOREBOOT, NSU

@@ -1,0 +1,11 @@
+[Unit]
+Description=ITMAgent.
+Requires=network.target
+
+[Service]
+Type=oneshot
+ExecStart=bash -c '/opt/IBM/ITM/bin/itmcmd agent start lz'
+ExecStop=bash -c '/opt/IBM/ITM/bin/itmcmd agent stop lz'
+
+[Install]
+WantedBy=multi-user.targe

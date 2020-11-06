@@ -1,0 +1,151 @@
+#{{ ansible_managed }}
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+
+# If you want to change the port on a SELinux system, you have to tell
+# SELinux about this change.
+# semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
+
+Protocol 2
+
+{% if sshd_use_dns is defined %}
+UseDNS {{ sshd_use_dns }}
+{% else %}
+UseDNS no
+{% endif %}
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# What ports, IPs and protocols we listen for
+{% if sshd_ports is defined %}
+{%   for port in sshd_ports %}
+Port {{ port }}
+{%   endfor %}
+{% else %}
+Port 22
+{% endif %}
+
+{% if sshd_listen is defined %}
+# Use these options to restrict which interfaces/protocols sshd will bind to
+{%   for address in sshd_listen %}
+ListenAddress {{ address }}
+{%   endfor %}
+{% endif %}
+
+{% if sshd_banner is defined %}
+Banner {{ sshd_banner }}
+{% else %}
+Banner none
+{% endif %}
+
+{% if login_root is defined %}
+PermitRootLogin {{ login_root }}
+{% else %}
+PermitRootLogin no
+{% endif %}
+
+{% if gss_auth is defined %}
+GSSAPIAuthentication {{ gss_auth }}
+{% else %}
+GSSAPIAuthentication no
+{% endif %}
+{% if gss_cleanup is defined %}
+GSSAPICleanupCredentials {{ gss_cleanup }}
+{% else %}
+GSSAPICleanupCredentials no
+{% endif %}
+
+{% if sshd_passwd_auth is defined %}
+PasswordAuthentication {{ sshd_passwd_auth }}
+{% else %}
+PasswordAuthentication yes
+{% endif %}
+{% if sshd_pubkey_auth is defined %}
+PubkeyAuthentication {{ sshd_pubkey_auth }}
+{% else %}
+PubkeyAuthentication yes
+{% endif %}
+
+{% if user_accounts == "yes"  %}
+ChallengeResponseAuthentication yes
+{% else %}
+ChallengeResponseAuthentication no
+{% endif %}
+{% if user_accounts == "yes" %}
+AuthorizedKeysFile /usr/local/etc/ssh/%u_authorized_keys
+{% else %}
+AuthorizedKeysFile	.ssh/authorized_keys
+{% endif %}
+
+{% if sshd_max_sessions is defined %}
+MaxSessions {{ sshd_max_sessions }}
+{% else %}
+MaxSessions 5
+{% endif %}
+{% if sshd_max_auth is defined %}
+MaxAuthTries {{ sshd_max_auth }}
+{% else %}
+MaxAuthTries 3
+{% endif %}
+{% if sshd_alive_interval is defined %}
+ClientAliveInterval {{ sshd_alive_interval }}
+{% else %}
+ClientAliveInterval 120
+{% endif %}
+{% if sshd_alive_count_max is defined %}
+ClientAliveCountMax {{ sshd_alive_count_max }}
+{% else %}
+ClientAliveCountMax 720
+{% endif %}
+
+X11Forwarding yes
+
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
+
+{% if sshd_pmotd is defined %}
+PrintMotd {{ sshd_pmotd }}
+{% else %}
+PrintMotd no
+{% endif %}
+{% if sshd_plast is defined %}
+PrintLastLog {{ sshd_plast }}
+{% else %}
+PrintLastLog yes
+{% endif %}
+{% if sshd_tkeep_alive is defined %}
+TCPKeepAlive {{ sshd_tkeep_alive }}
+{% else %}
+TCPKeepAlive yes
+{% endif %}
+
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+
+LogLevel INFO
+SyslogFacility AUTHPRIV
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
+# WARNING: 'UsePAM no' is not supported in Red Hat Enterprise Linux and may cause several
+# problems.
+
+{% if sshd_upam is defined %}
+UsePAM {{ sshd_upam }}
+{% else %}
+UsePAM yes
+{% endif %}
+
+{% if sshd_deny_users is defined %}
+DenyUsers {{ sshd_deny_users | join(' ') }}
+{% endif %}

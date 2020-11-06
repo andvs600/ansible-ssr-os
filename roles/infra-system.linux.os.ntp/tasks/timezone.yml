@@ -1,0 +1,7 @@
+---
+- name: Set timezone
+  timezone:
+    name: "{{ t_zone | default('Europe/Moscow') }}"
+  notify: sync_ntp
+  tags:
+    - set_tz

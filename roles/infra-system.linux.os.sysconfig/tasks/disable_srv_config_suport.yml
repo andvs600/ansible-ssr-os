@@ -1,0 +1,44 @@
+---
+- name: Check if postfix default install
+  stat: path="/etc/postfix/main.cf"
+  register: postfix_conf_exists
+
+- block:
+    - name: Disable IPv6 PostFix
+      lineinfile:
+        path: /etc/postfix/main.cf 
+        regexp: '^inet\_interfaces'
+        line: 'inet_interfaces = 127.0.0.1'
+      ignore_errors: yes
+
+    - lineinfile:
+        path: /etc/postfix/main.cf 
+        regexp: '^inet\_protocols'
+        line: 'inet_protocols = ipv4'
+      ignore_errors: yes
+  when: (postfix_conf_exists.stat.exists == true)
+
+- name: Check if chronyd service active
+  shell: systemctl is-active chronyd.service
+  register: chrony_service_status
+  ignore_errors: yes
+
+- block:
+    - name: Replace chronyd tcp_ip6 false
+      replace:
+        path: /etc/chrony.conf
+        regexp: '(.*bindcmdaddress ::1.*)'
+        replace: '#\1'
+      ignore_errors: yes
+  
+    - name: Add only IPv4 use chronyd
+      lineinfile:
+        dest: /etc/sysconfig/chronyd
+        regexp: '^OPTIONS='
+        line: 'OPTIONS="-4"'
+      ignore_errors: yes
+  always:
+    - service:
+        name: chronyd
+        state: restarted
+  when: chrony_service_status is succeeded

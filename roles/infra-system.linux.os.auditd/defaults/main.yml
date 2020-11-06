@@ -1,0 +1,8 @@
+---
+auditd_home: /etc/audit
+auditd_confdir: /etc/audit/rules.d
+auditd_conf_lineinfile:
+  - { re: '^max_log_file = .*', l: 'max_log_file = 50' }
+  - { re: '^num_logs = .*', l: 'num_logs = 10' }
+  - { re: '^disp_qos = .*', l: 'disp_qos = lossless' }
+auditd_custom_rules: []

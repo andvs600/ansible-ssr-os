@@ -1,0 +1,84 @@
+  
+# {{ ansible_managed }}
+# Priority: prefix key and reloading tmux.conf:
+set-option -g default-shell "/bin/bash"
+set-option -g default-terminal "screen"
+set-option -g base-index 1
+set-option -g pane-base-index 1
+set-option -g prefix C-b
+set-option -g history-limit 2500
+set-option -g allow-rename off
+set-option -g status-interval 60
+set-option -g status-justify centre
+set-option -g status-position bottom
+set-option -g mouse on
+set-option -g set-titles off
+set-option -g set-titles-string "#S:#I:#W - "#T""
+# default statusbar colors
+set-option -g status-fg white
+set-option -g status-bg black
+set-option -g status-attr default
+# default window title colors
+set-window-option -g window-status-fg red
+set-window-option -g window-status-bg black
+set-window-option -g window-status-attr dim
+# active window title colors
+set-window-option -g window-status-current-fg green
+set-window-option -g window-status-current-bg black
+set-window-option -g window-status-current-attr bright
+# command/message line colors
+set-option -g message-fg white
+set-option -g message-bg black
+set-option -g message-attr bright
+set-option -g status-right '#[fg=yellow,bg=black,bold] %d/%b/%y #[fg=red,bg=black,bold] %H:%M '
+#set-window-option -g window-status-format ' #I#[fg=green]:#[fg=yellow]#W#[fg=red]#F '
+# Key options
+#unbind '"'
+#unbind %
+#bind | split-window -h
+#bind - split-window -v
+bind -n S-Left previous-window
+bind -n S-Right next-window
+bind-key -n S-Up swap-window -t -1
+bind-key -n S-Down swap-window -t +1
+# open a man page in new window
+set-option -ga terminal-overrides ',xterm*:smcup@:rmcup@'
+set-option -g terminal-overrides "*88col*:colors=88,*256col*:colors=256,xterm*:XT:Ms=\E]52;%p1%s;%p2%s\007:Cc=\E]12;%p1%s\007:Cr=\E]112\007:Cs=\E[%p1%d q:Csr=\E[2 q,screen*:XT"
+set-option -g update-environment "DISPLAY SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
+bind '~' command-prompt "split-window 'exec man %%'"
+# Bind function keys.
+bind -n F1 select-window -t 1
+bind -n F2 select-window -t 2
+bind -n F3 select-window -t 3
+bind -n F4 select-window -t 4
+# Reload the config.
+bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
+# Pane copy/pasting
+set-option -g mode-keys vi
+bind-key -T copy-mode-vi 'v' send-keys -X begin-selection
+bind-key -T copy-mode-vi 'y' send-keys -X copy-pipe 'reattach-to-user-namespace pbcopy'
+bind : command-prompt
+# All new windows started at startup.
+new -d -s default -n default
+rename-window -t 1 default
+neww -d -n local -t 2
+split-window -v -p 25 -t 2
+selectw -t 2
+selectp -t 1
+rename-window -t 2 local
+neww -d -n remote -t 3
+split-window -v -p 75 -t 3
+selectw -t 3
+selectp -t 1
+rename-window -t 3 remote
+neww -d -n debug -t 4
+rename-window -t 4 debug
+selectw -t 4
+split-window -h -p 50 -t 1 'journalctl -f'
+split-window -v -p 80 -t 2 top
+# Select local windows panel
+selectw -t 2
+selectp -t 1
+set -g remain-on-exit
+#set-hook -g pane-died 'capture-pane -S - -E - ; save-buffer "$HOME/logs/tmux/tmux-saved.#{host_short}-#{session_id}:#{window_id}:#{pane_id}-#{pane_pid}-#{client_activity}.log"; delete-buffer; kill-pane'
+# END

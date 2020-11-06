@@ -1,0 +1,41 @@
+---
+- name: Check services exists
+  block:
+    - name: Check if Docker service exists
+      stat: path="/usr/lib/systemd/system/docker.service"
+      register: docker_service
+      ignore_errors: yes
+
+    - name: Check if iptables service exists
+      stat: path="/usr/lib/systemd/system/iptables.service"
+      register: iptables_service
+      ignore_errors: yes
+    
+    - name: Check if nftables service exists
+      stat: path="/usr/lib/systemd/system/nftables.service"
+      register: nftables_service
+      ignore_errors: yes
+
+- name: Skip play if Docker installed
+  block:
+    - debug:
+        msg: "Possibly the node uses Docker. The node must be configured manually!"
+      register: result
+  when:
+    - (docker_service.stat.exists == true) or ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
+
+- name: Stop and mask firewalld service
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+    masked: yes
+  when: result is skipped
+
+- name: Include task config iptables
+  include: iptables.yml
+  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7')
+
+- name: Include task config nftables
+  include: nftables.yml
+  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8')

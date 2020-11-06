@@ -1,0 +1,16 @@
+---
+- name: Replace udp_ip6 false
+  replace:
+    path: /etc/netconfig
+    regexp: '^udp6'
+    replace: '#\1'
+  register: result
+  failed_when: result.rc not in (0, 1, 257)
+    
+- name: Replace tcp_ip6 false
+  replace:
+    path: /etc/netconfig
+    regexp: '^tcp6'
+    replace: '#\1'
+  register: result
+  failed_when: result.rc not in (0, 1, 257)

@@ -1,0 +1,5 @@
+---
+- name: sync_ntp
+  service:
+    name: chronyd
+    state: restarted

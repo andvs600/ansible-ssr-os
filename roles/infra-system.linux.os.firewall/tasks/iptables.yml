@@ -1,0 +1,66 @@
+---
+- name: Install iptables service
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - iptables
+    - iptables-services
+  when: not iptables_service.stat.exists
+  tags:
+    - iptables
+
+- name: Enable service iptables and ensure it is not masked
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+    masked: no
+  when: (activate_firewall | bool == true) and (activate_firewall is defined)
+  tags:
+    - iptables
+
+- name: Change the xt_recent module 
+  modprobe:
+    name: xt_recent
+    state: present
+    params: 'ip_pkt_list_tot=75'
+  tags:
+    - iptables
+
+- name: Copy the xt_recent module config
+  copy:
+    src: files/ip_pkt_list_tot.conf
+    dest: /etc/modprobe.d/ip_pkt_list_tot.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - iptables
+
+- name: Copy the base rules file
+  template:
+    src: iptcfg.j2
+    dest: /usr/sbin/iptcfg
+    owner: root
+    group: root
+    mode: '0750'
+  tags:
+    - iptables
+    
+- name: Copy the custom rules template file
+  template:
+    src: custom_rules.j2
+    dest: /etc/sysconfig/custom
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart IPT
+  tags:
+    - iptables
+
+- name: Check status IPTables
+  shell: systemctl is-active iptables.service
+  register: ipt_services_status
+  ignore_errors: yes

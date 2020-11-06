@@ -1,0 +1,33 @@
+---
+packages_el7:
+  - cockpit
+  - cockpit-ws
+  - cockpit-dashboard
+  - cockpit-doc
+  - cockpit-packagekit
+  - cockpit-subscriptions
+  - subscription-manager-cockpit
+  - cockpit-docker
+  - cockpit-composer
+  - cockpit-system
+  - cockpit-storaged
+  - cockpit-pcp
+  - cockpit-tests
+  - policycoreutils-python
+
+packages_el8:
+  - cockpit
+  - cockpit-ws
+  - cockpit-dashboard
+  - cockpit-doc
+  - cockpit-packagekit
+  - subscription-manager-cockpit
+  - cockpit-podman
+  - cockpit-composer
+  - cockpit-system
+  - cockpit-storaged
+  - cockpit-pcp
+  - cockpit-session-recording
+  - policycoreutils-python-utils
+  
+websm_port: 3389

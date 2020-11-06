@@ -1,0 +1,9 @@
+---
+- name: Test_sshd_configuration_and_restart
+  command: sshd -t
+  notify: Restart_sshd
+
+- name: Restart_sshd
+  service:
+    name: sshd
+    state: restarted

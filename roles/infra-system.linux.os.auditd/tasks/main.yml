@@ -1,0 +1,83 @@
+---
+- block:
+    - name: Auditd config files
+      lineinfile:
+        dest: "{{ auditd_home }}/auditd.conf"
+        regexp: "{{ item.re }}"
+        line: "{{ item.l }}"
+      with_items: "{{ auditd_conf_lineinfile | default([]) }}"
+
+    - name: Auditd set rules
+      template:
+        src: "audit.rules.j2"
+        dest: "{{ auditd_confdir }}/audit.rules"
+        owner: root
+        group: root
+        mode: '0640'
+        backup: "{{ auditd_backup | default(false) }}"
+      notify:
+        - Auditd restart service
+  tags:
+    - change_rules
+  
+- block:
+    - name: Auditd check is augenrules is present
+      stat:
+        path: "/sbin/augenrules"
+      register: augenrules_file
+      changed_when: false
+
+    - name: Auditd assemble rules into a single file
+      assemble:
+        src: "{{ auditd_confdir }}"
+        dest: "{{ auditd_home }}/audit.rules"
+      when: not augenrules_file.stat.exists
+      notify:
+        - Auditd restart service
+    
+- name: Check if grub is present
+  stat: 
+    path: "/etc/default/grub"
+  register: hasgrub
+
+- name: Check if auditd is already modify
+  stat: 
+    path: "/tmp/auditd_change"
+  register: haschange
+
+- name: Check if auditing present in grub config 
+  slurp: 
+    src: /proc/cmdline
+  register: cmdline
+   
+- block:
+    - name: Enable auditing in grub for Processes That Start Prior to auditd - CIS
+      replace:
+        dest: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX="(.*)"'
+        replace: 'GRUB_CMDLINE_LINUX="\1 audit=1 audit_backlog_limit=8192"'
+        backup: yes
+      register: result
+      when: >
+        (hasgrub.stat.exists and 
+           (not "audit=1" in cmdline.content|b64decode and haschange.stat.exists == False)
+        )
+    
+    - name: grub2-mkconfig
+      command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      when: result is not skipped
+            
+    - name: Create file fact grub2 for auditd configure
+      file:
+        path: /tmp/auditd_change
+        state: touch
+        modification_time: now
+      ignore_errors: yes
+      when: result.changed == True and haschange.stat.exists == False
+  when: >
+    not (ansible_virtualization_type is defined and
+          (ansible_virtualization_type == "lxc" or ansible_virtualization_type == "docker")
+        )
+         
+- name: flush handlers to restart auditd immediately
+  meta: flush_handlers

@@ -1,0 +1,139 @@
+---
+- name: Uninstall ITM-agent
+  block:
+    - name: Run uninstall ITM-agent
+      command: /opt/IBM/ITM/bin/uninstall.sh -h /opt/IBM/ITM REMOVE EVERYTHING -f
+    
+    - name: Remove directory ITM-agent
+      file:
+        path: /opt/IBM/ITM
+        state: absent
+
+  when: (uninstall_itm_agnt | bool == true) and (uninstall_itm_agnt is defined)
+  always:
+    - meta: end_play
+  tags: 
+    - nb_uninstall
+
+- name: Check if agent already exists
+  stat: path="/opt/IBM/ITM/bin/itmcmd"
+  register: itm_status    
+
+- name: Check if itm-agent service exists
+  stat: path="/usr/lib/systemd/system/itm-agent.service"
+  register: check_itm_service_status
+
+- name: Download and extract agent media ITM
+  block:
+    - name: Pre insatllation additional library for RHEL\CentOS 8
+      yum:
+        name: libnsl
+        state: present
+      when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'
+
+    - name: Pre insatllation additional library
+      yum:
+        name: "{{ dep_itm_pack }}"
+        state: present
+      vars:
+        dep_itm_pack:
+        - "compat-libstdc++-33.i686"
+        - "compat-libstdc++-33.x86_64"
+        - "libstdc++.i686"
+        - "libXp.x86_64"
+        - "libXp.i686"
+        - "ksh"
+        - "libgcc"
+        - "compat-libstdc++-33.i686"
+        - "libstdc++"
+        - "java"
+        - "libXcursor"
+        - "libXi"
+        - "libXft"
+        - "libXtst"
+        - "nfs-utils"
+
+    - name: Create a temp directory if it does not exist
+      file:
+        path: "/opt/itm_agnt"
+        state: directory
+        mode: '0755'
+
+    - name: Mount NFS share
+      mount: 
+        fstype: nfs
+        opts: defaults
+        dump: '0'
+        passno: '0'
+        src: gvc-rhs-01.gvc.oao.rzd:/nfs
+        path: /opt/itm_agnt/iso
+        state: mounted
+
+    - name: Create systemd service unit
+      copy:
+        src: itm-agent.service
+        dest: /etc/systemd/system
+      tags:
+        - itm_service
+  
+  when: itm_status.stat.exists == False
+  tags:
+    - itm_install
+
+- name: Insatll client use silent files
+  block:
+    - name: Mount installation media
+      mount:
+        fstype: iso9660
+        opts: ro,noauto
+        src: /opt/itm_agnt/iso/itm.iso
+        path: /media
+        state: mounted
+    
+    - name: Copy answer file for install
+      copy:
+        src: itm_silent_install
+        dest: /opt/itm_agnt/itm_silent_install
+        mode: 0644
+
+    - name: Copy answer file for Configure
+      template:
+        src: /itma_silent.j2
+        dest: /opt/itm_agnt/itma_silent
+        mode: 0644
+
+    - name: Install ITM-agent
+      command: /media/IBM_ITM/install.sh -q -h /opt/IBM/ITM -p /opt/itm_agnt/itm_silent_install
+
+    - name: Configure ITM-agent
+      command: /opt/IBM/ITM/bin/CandleConfig -A -p /opt/itm_agnt/itma_silent lz
+        
+  when: itm_status.stat.exists == False
+  tags:
+    - itm_install
+
+- name: Cleanup
+  block:
+    - name: Unmount a mounted volume
+      mount:
+        path: "{{ item }}"
+        state: unmounted
+      loop:
+        - /media
+        - /opt/itm_agnt/iso
+    
+    - name: Clean temp download files
+      file:
+        path: /opt/itm_agnt
+        state: absent
+
+    - name: Reload systemd | Start ITM-agent
+      systemd:
+        daemon-reload: yes
+        service: itm-agent.service
+        state: started
+      when: check_itm_service_status.stat.exists == True
+
+  when: itm_status.stat.exists == False
+  tags: 
+    - itm_cleanup

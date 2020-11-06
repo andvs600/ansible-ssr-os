@@ -1,0 +1,2 @@
+#!/bin/bash
+if /usr/bin/test -f /usr/bin/lshal; then /usr/bin/sudo /usr/bin/lshal "${@}"; fi;

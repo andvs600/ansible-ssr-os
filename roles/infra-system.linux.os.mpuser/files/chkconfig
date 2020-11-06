@@ -1,0 +1,2 @@
+#!/bin/bash
+if /usr/bin/test -f /sbin/chkconfig; then /usr/bin/sudo /sbin/chkconfig "${@}"; fi;

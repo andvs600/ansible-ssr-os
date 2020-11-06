@@ -1,0 +1,102 @@
+---
+- name: Copy sshd banner
+  copy:
+    src: banner
+    dest: /etc/ssh/banner
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+    - sshd_conf
+
+- name: SSHD | Config files /etc/ssh/sshd_config
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'
+    backup: true
+  notify: 
+    - Test_sshd_configuration_and_restart
+  tags:
+    - sshd_conf
+
+- name: Set motd banner
+  copy:
+    src: motd.sh
+    dest: /etc/profile.d/motd.sh
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+    - motd_banner
+
+- name: Copy updates.environment
+  copy:
+    src: updates.environment
+    dest: /usr/bin/updates.environment
+    owner: root
+    group: root
+    mode: '0750'
+  tags:
+    - motd_banner
+
+- name: Create systemd service unit
+  copy:
+    src: check-updates.service
+    dest: /etc/systemd/system
+  tags:
+    - motd_banner
+
+- name: Enable systemd service unit
+  systemd:
+    name: check-updates.service
+    state: started
+    masked: no
+  tags:
+    - motd_banner
+    
+- name: Create systemd timer
+  copy:
+    src: check-updates.timer
+    dest: /etc/systemd/system
+  tags:
+    - motd_banner
+    
+- name: Reload systemd | Start and Enable check-updates.timer
+  systemd:
+    daemon-reload: yes
+    service: check-updates.timer
+    state: started
+    enabled: yes
+  tags:
+    - motd_banner
+    
+- name: Check bashrc changed
+  slurp:
+    src: /etc/bashrc
+  register: bashrc_managed
+
+- block:
+    - name: Change | Set up bash custom prompt
+      copy:
+        src: bashrc
+        dest: /etc/bashrc
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      tags:
+        - sshd_conf
+
+    - name: Change bash history format
+      blockinfile:
+        path: /etc/bashrc
+        block: |
+          shopt -s cmdhist
+          shopt -s histappend
+          export HISTFILESIZE=1024
+          export HISTIGNORE="ls:ps:history"
+          export HISTTIMEFORMAT="%h %d %H:%M:%S "
+  when: not "ANSIBLE MANAGED" in bashrc_managed.content|b64decode

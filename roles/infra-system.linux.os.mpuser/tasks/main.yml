@@ -1,0 +1,71 @@
+---
+- set_fact:
+    rand_pass: "{{ temp_str }}"
+
+- name: Install aditionals packages
+  yum:
+    name: "{{ dep_mpu_pack }}"
+    state: present
+  vars:
+    dep_mpu_pack:
+    - lsof
+    - net-tools
+
+- name: Create user <mpuser> account
+  user:
+    name: mpuser
+    state: present
+    password: "{{ rand_pass | password_hash('sha512') }}"
+    update_password: on_create
+    groups: systemd-journal
+    shell: /bin/bash
+    comment: 'User for MaxPatrol vulnerability scanner'
+  tags: mp_user
+
+- name: Set authorized key taken for <mpuser>
+  authorized_key:
+    user: mpuser
+    state: present
+    key: "{{ mpuser_key }}"
+
+- name: Add sudoers rules
+  template:
+    force: yes
+    src: ../templates/maxpatrol.rule.j2
+    dest: /etc/sudoers.d/maxpatrol
+    validate: '/usr/sbin/visudo -cf %s'  
+
+- name: Allow connect only from MaxPatrol server
+  blockinfile:
+    backup: true
+    path: /etc/ssh/sshd_config
+    block: |
+      Match User mpuser
+            AllowUsers {{ mpserver | join(' ') }}
+  when: mpserver is defined
+  notify:
+    - sshd_restart
+
+- name: Create a directory '~/bin' if it does not exist
+  file:
+    path: /home/mpuser/bin
+    state: directory
+    owner: mpuser
+    group: mpuser
+    mode: '0750'
+
+- name: Copy files for MaxPatrol
+  copy:
+    src: "{{ item }}"
+    dest: /home/mpuser/bin/
+    owner: mpuser
+    group: mpuser
+    mode: 0700
+  with_fileglob:
+    - ../files/*
+
+- name: Change user specific environment and startup programs
+  lineinfile:
+    path: /home/mpuser/.bash_profile
+    regexp: "PATH=$PATH:$HOME/.local/bin:$HOME/bin"
+    line: "PATH=$HOME/bin:$PATH:$HOME/.local/bin"

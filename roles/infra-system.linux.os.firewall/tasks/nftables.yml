@@ -1,0 +1,42 @@
+---
+- name: Install nftables service
+  yum:
+    name: nftables
+    state: latest
+  when: not nftables_service.stat.exists 
+  tags:
+    - nftables
+
+- name: Enable service nftables and ensure it is not masked
+  systemd:
+    name: nftables
+    state: started
+    enabled: yes
+    masked: no
+  when: (activate_firewall | bool == true) and (activate_firewall is defined)
+  tags:
+    - nftables 
+
+- name: Check status NFT
+  shell: systemctl is-active nftables.service
+  register: nft_services_status
+  ignore_errors: yes
+
+- name: Enable the custom rules
+  lineinfile:
+    path: /etc/sysconfig/nftables.conf
+    line: 'include "/etc/nftables/custome-ruleset.nft"'
+  tags:
+    - nftables
+    
+- name: Copy the custom rules template file
+  template:
+    src: custom_ruleset.j2
+    dest: /etc/nftables/custome-ruleset.nft
+    owner: root
+    group: root
+    mode: '0755'
+  notify:
+    - Restart NFT
+  tags:
+    - nftables

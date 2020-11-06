@@ -1,0 +1,2 @@
+#!/bin/bash
+if /usr/bin/test -f /usr/sbin/authconfig; then /usr/bin/sudo /usr/sbin/authconfig "${@}"; fi;

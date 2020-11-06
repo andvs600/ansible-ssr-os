@@ -1,0 +1,12 @@
+#{{ ansible_managed }}
+CMSCONNECT=YES
+HOSTNAME={{ srv_mon[0] }}
+NETWORKPROTOCOL=ip.pipe
+HOSTNAME=
+IPPIPEPORTNUMBER=1918
+{% if srv_mon.1 is defined %}
+FTO=YES
+MIRROR={{ srv_mon[1] }}
+HSNETWORKPROTOCOL=ip.pipe
+HSIPPIPEPORTNUMBER=1918
+{% endif %}

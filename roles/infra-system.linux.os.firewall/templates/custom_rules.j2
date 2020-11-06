@@ -1,0 +1,31 @@
+#{{ ansible_managed }}
+# === DNS SERVER ===
+$IPT -A PREROUTING -t raw -j NOTRACK -m udp -p udp --dport 53
+$IPT -A PREROUTING -t raw -j NOTRACK -m tcp -p tcp --dport 53
+$IPT -A INPUT -p udp --dport 53 -j ACCEPT
+$IPT -A INPUT -p tcp --dport 53 -j ACCEPT
+# === FTP SERVER ===
+modprobe ip_conntrack_ftp
+$IPT -A INPUT -p tcp -m multiport --dports 20,21 -j ACCEPT
+# === WEB CONTROL ===
+$IPT -A INPUT -p tcp --dport 3389 {% if nf_int is undefined or nf_int is sameas true %}-s 10.0.0.0/8 {% endif %}-j ACCEPT
+$IPT -A INPUT -p tcp --dport 9090 {% if nf_int is undefined or nf_int is sameas true %}-s 10.0.0.0/8 {% endif %}-j ACCEPT
+$IPT -A INPUT -p tcp --dport 10000 {% if nf_int is undefined or nf_int is sameas true %}-s 10.0.0.0/8 {% endif %}-j ACCEPT
+# === KATELLO AGENT ===
+$IPT -A INPUT -p udp -m multiport --dports 67,69 -j ACCEPT
+$IPT -A INPUT -p tcp -m multiport --dports 5000,5647,8000,8140,8443,9090 -j ACCEPT
+# === ITM AGENT ===
+$IPT -A INPUT -p udp --dport 1918 -j ACCEPT
+$IPT -A INPUT -p tcp -m multiport --dports 1918,1919,1920,3660,6014,10110,14206,15001 -j ACCEPT
+# === NETBACKUP AGENT ===
+$IPT -A INPUT -p tcp -m multiport --dports 443,1556,2821,10082,10102,13720,13724,13782 -j ACCEPT
+# === Cocpit ===
+$IPT -A INPUT -p tcp -m multiport --dport 9090 -j ACCEPT
+# === CUSTOM ===
+{% if nf_ports %}$IPT -A INPUT -p tcp -m multiport --dport {{ nf_ports | join(', ') }} -j ACCEPT{% endif %}
+{% if nf_custom_ruleset is defined %}
+{%   for rules in nf_custom_ruleset %}
+{{ rules }}
+{%   endfor %}
+{% endif %}
+# === END ===

@@ -1,0 +1,3 @@
+#!/bin/bash
+if /usr/bin/test -f /usr/bin/stat; then /usr/bin/sudo /usr/bin/stat "${@}"; fi;
+

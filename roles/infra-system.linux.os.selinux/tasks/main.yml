@@ -1,0 +1,75 @@
+---
+- name: Install SELinux python2 tools
+  package:
+    name: "{{ dep_py_pack }}"
+    state: present
+  vars:
+    dep_py_pack:
+    - libselinux-python
+    - policycoreutils-python
+  when: "ansible_python_version is version('3', '<')"
+  tags: 
+    - selinux
+    
+- name: Install SELinux python3 tools
+  package:
+    name: "{{ dep_py_pack }}"
+    state: present
+  vars:
+    dep_py_pack:
+    - libselinux-python3
+    - policycoreutils-python3
+  when: "ansible_python_version is version('3', '>=')"
+  tags: 
+    - selinux
+    
+- name: refresh facts
+  setup:
+    filter: ansible_selinux
+  tags: 
+    - selinux
+    
+- name: Install SELinux tool semanage
+  package:
+    name: policycoreutils-python-utils
+    state: present
+  when: ansible_distribution_major_version > "7" and ( ansible_distribution == "CentOS" or ansible_distribution == "RedHat" )
+  tags: 
+    - selinux
+    
+- name: configure selinux policy and state
+  selinux:
+    conf: "{{ selinux_config|default('/etc/selinux/config') }}"
+    policy: "{{ selinux_policy }}"
+    state: "{{ selinux_state }}"
+  tags: 
+    - selinux
+
+- name: toggle selinux booleans
+  seboolean:
+    name: "{{ item.key }}"
+    state: "{{ item.value.state|default('yes') }}"
+    persistent: "{{ item.value.persistent|default('yes') }}"
+  with_dict: "{{ selinux_boolean|default({}) }}"
+  tags: 
+    - selinux
+    
+- name: configure selinux network port definition
+  seport:
+    setype: "{{ item.key }}"
+    ports: "{{ item.value.ports }}"
+    proto: "{{ item.value.protocol|default('tcp') }}"
+    state: "{{ item.value.state|default('present') }}"
+  with_dict: "{{ selinux_ports|default({}) }}"
+  tags: 
+    - selinux
+    
+- name: configure selinux fcontext
+  sefcontext:
+    target: "{{ item.value.file_spec }}"
+    ftype: "{{ item.value.ftype|default('a') }}"
+    setype: "{{ item.value.setype }}"
+    state: "{{ item.value.state }}"
+  with_dict: "{{ selinux_fcontext|default({}) }}"
+  tags: 
+    - selinux

@@ -1,0 +1,131 @@
+---
+- name: Check if IPv6 disabled at grub command line
+  slurp:
+    src: /proc/cmdline
+  register: cmdline
+
+- name: Ansible check ip6 support.
+  stat:
+    path: /proc/sys/net/ipv6
+  register: proc_ip6
+
+- block:
+    - name: Include task disable IPv6 in GRUB
+      include: disable-grub.yml
+      when: (ipv6_grub_disable | bool == true) and (ipv6_grub_disable is defined)
+      tags:
+        - disable_ipv6_grub
+  
+    - name: Include task disable IPv6 in kernel
+      include: disable_kernel_suport.yml
+      tags:
+        - disable_ipv6_kernel
+  
+    - name: Include task disable IPv6 in netwok scripts
+      include: disable_netscript_suport.yml
+      tags:
+        - disable_ipv6_network
+  
+    - name: Include task disable IPv6 in base services
+      include: disable_srv_config_suport.yml
+
+    - name: SELinux to allow domain to kernel load modules.
+      seboolean:
+        name: domain_kernel_load_modules
+        state: yes
+        persistent: yes
+  when: proc_ip6.stat.exists and (ansible_system == 'Linux' and not "ipv6.disable=1" in cmdline.content|b64decode)
+
+- name: Override file for specific settings
+  template:
+    src: "99-sysctl.conf.j2"
+    dest: "/etc/sysctl.d/99-sysctl.conf" 
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Include task for RedHat/CentOS 7
+  include: sysctl_config_el7.yml
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+- name: Include task for RedHat/CentOS 8
+  include: sysctl_config_el8.yml
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'  
+
+- block:
+    - name: Check if Docker service exists
+      stat: path="/usr/lib/systemd/system/docker.service"
+      register: docker_service_exists
+      ignore_errors: yes
+
+    - name: Check if Docker service active
+      shell: systemctl is-active docker.service
+      register: docker_service_status
+      when: (docker_service_exists.stat.exists == true)
+      ignore_errors: yes
+
+    - name: Check if CRI-O service exists
+      stat: path="/usr/lib/systemd/system/crio.service"
+      register: crio_service_exists
+      ignore_errors: yes
+
+    - name: Check if CRI-O service active
+      shell: systemctl is-active crio.service
+      register: crio_service_status
+      when: (crio_service_exists.stat.exists == true)
+      ignore_errors: yes
+
+    - name: Disable ip forwarding if docker not installed
+      sysctl: 
+        name: net.ipv4.ip_forward
+        value: '0'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      when: not ((docker_service_exists.stat.exists == true) or (crio_service_exists.stat.exists == true))
+          
+    - name: Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+      sysctl: 
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
+      when: > 
+        (lxc_hosted | bool == true) or
+          (((docker_service_exists.stat.exists == true) and (docker_service_status is succeeded)) or
+            ((crio_service_exists.stat.exists == true) and (crio_service_status is succeeded))
+        )
+  tags:
+    - ip_forward
+
+- name: Allow domain to kernel load modules
+  seboolean:
+    name: domain_kernel_load_modules
+    state: yes
+    persistent: yes
+
+- name: Allow virt to sandbox use all caps
+  seboolean:
+    name: virt_sandbox_use_all_caps
+    state: yes
+    persistent: yes
+
+- name: Allow virt to use nfs
+  seboolean:
+    name: virt_use_nfs
+    state: yes
+    persistent: yes
+
+- name: Set specific settings override sysctl.conf
+  sysctl:
+    name: '{{ item.key }}'
+    value: '{{ item.value }}'
+    sysctl_file: /etc/sysctl.d/99-sysctl.conf
+    state: present
+    reload: yes
+  with_dict: '{{ sysctl_param_custom }}'
+  when: sysctl_param_custom is defined
+
+- name: Force all notified handlers to run at this point, not waiting for normal sync points
+  meta: flush_handlers

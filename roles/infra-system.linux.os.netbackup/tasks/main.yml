@@ -1,0 +1,198 @@
+---
+- name: Uninstall Netbackup agent
+  block:
+    - name: Unmount a mounted volume
+      mount:
+        path: "{{ item }}"
+        state: unmounted
+      loop:
+        - /media
+        - /opt/netbackup/iso
+
+    - block:
+        - name: Stop NB agent
+          shell: "/usr/openv/netbackup/bin/bp.kill_all"
+          register: result
+          failed_when: >
+            ("The following processes are still running" in result.stdout) or
+            (result.stderr != '') or
+            (result.rc == 2)
+          
+      rescue:
+        - name: Get running processes
+          shell: "ps -ef | grep -v grep | grep -w  vnetd | awk '{print $2}'"
+          register: running_processes
+
+        - name: Kill running processes
+          shell: "kill {{ item }}"
+          with_items: "{{ running_processes.stdout_lines }}"
+
+        - wait_for:
+            timeout: 25
+            path: "/proc/{{ item }}/status"
+            state: absent
+          with_items: "{{ running_processes.stdout_lines }}"
+          ignore_errors: yes
+          register: killed_processes
+
+        - name: Force kill stuck processes
+          shell: "kill -9 {{ item }}"
+          with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"    
+    
+    - name: Remove packages
+      yum:
+        name: "{{ nb_pack }}"
+        state: absent
+      vars:
+        nb_pack:
+        - VRTSnbcfg
+        - VRTSnbjava
+        - VRTSnbjre
+        - VRTSnbclt
+        - VRTSpbx
+        - VRTSnbpck
+        - VRTSpddea
+
+    - name: Remove directory NB
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /opt/netbackup
+        - /opt/veritas
+        - /opt/Symantec
+  when: (uninstall_netbackup | bool == true) and (uninstall_netbackup is defined)
+  always:
+    - meta: end_host
+  tags: 
+    - nb_uninstall
+
+- name: Download and extract agent media Netbackup
+  block:
+    - name: Pre insatllation additional library for RHEL\CentOS 8
+      yum:
+        name: "{{ dep_nb_pack }}"
+        state: present
+      vars:
+        dep_nb_pack:
+        - libnsl
+        - libXtst
+      when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'
+    
+    - name: Check nfs-utils package
+      yum:
+        name: nfs-utils
+        state: present
+        
+    - name: Create a temp directory if it does not exist
+      file:
+        path: /opt/netbackup
+        state: directory
+        mode: '0755'
+
+    - name: Mount NFS share
+      mount: 
+        fstype: nfs
+        opts: defaults
+        dump: '0'
+        passno: '0'
+        src: gvc-rhs-01.gvc.oao.rzd:/nfs
+        path: /opt/netbackup/iso
+        state: mounted
+  tags:
+    - nb_download
+
+- name: Insatll client binaries with native installers
+  block:
+    - name: Copy answer file
+      template:
+        src: NBInstallAnswer.conf.j2
+        dest: /tmp/NBInstallAnswer.conf
+        mode: 0644
+
+    - name: Mount installation media
+      mount:
+        fstype: iso9660
+        opts: ro,noauto
+        src: /opt/netbackup/iso/Netbackup_8.1.1_Centos_Client.iso
+        path: /media
+        state: mounted
+
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSnbpck.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSpbx.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSnbclt.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSnbjre.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSnbjava.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSpddea.rpm
+        - /media/NBClients/anb/Clients/usr/openv/netbackup/client/Linux/RedHat2.6.18/VRTSnbcfg.rpm
+
+    - name: Write info about media servers
+      lineinfile:
+        path: /usr/openv/netbackup/bp.conf
+        line: "MEDIA_SERVER = {{ item }}" 
+        insertafter: EOF
+      with_items:
+        - "{{ netbackup_media }}"
+
+    - block:
+        - name: Stop NB agent
+          shell: "/usr/openv/netbackup/bin/bp.kill_all"
+          register: result
+          failed_when: >
+            ("The following processes are still running" in result.stdout) or
+            (result.stderr != '') or
+            (result.rc == 2)
+
+      rescue:
+        - name: Get running processes
+          shell: "ps -ef | grep -v grep | grep -w  vnetd | awk '{print $2}'"
+          register: running_processes
+
+        - name: Kill running processes
+          shell: "kill {{ item }}"
+          with_items: "{{ running_processes.stdout_lines }}"
+
+        - wait_for:
+            timeout: 25
+            path: "/proc/{{ item }}/status"
+            state: absent
+          with_items: "{{ running_processes.stdout_lines }}"
+          ignore_errors: yes
+          register: killed_processes
+
+        - name: Force kill stuck processes
+          shell: "kill -9 {{ item }}"
+          with_items: "{{ killed_processes.results | select('failed') | map(attribute='item') | list }}"
+        
+    - name: Start NB agent
+      command:
+        cmd: /usr/openv/netbackup/bin/bp.start_all
+  tags:
+    - nb_install
+
+- name: Cleanup
+  block:
+    - name: Unmount a mounted volume
+      mount:
+        path: "{{ item }}"
+        state: unmounted
+      loop:
+        - /media
+        - /opt/netbackup/iso
+
+    - name: Clean temp download files
+      file:
+        path: /opt/netbackup
+        state: absent
+
+    - name: Clean temp answer file
+      file:
+        path: /tmp/NBInstallAnswer.conf
+        state: absent
+  tags: 
+    - nb_cleanup

@@ -1,0 +1,6 @@
+#!/bin/bash
+if /usr/bin/test -f /bin/netstat; then 
+	/usr/bin/sudo /bin/netstat "${@}"; 
+else
+	>&2 echo "-bash: netstat: not found"
+fi;

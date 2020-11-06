@@ -1,0 +1,2 @@
+#!/bin/bash
+if /usr/bin/test -f /bin/egrep; then /usr/bin/sudo /bin/egrep "${@}"; fi;

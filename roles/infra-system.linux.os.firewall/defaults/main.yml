@@ -1,0 +1,7 @@
+---
+# For hots in SPD
+intranet: true
+# For ports
+nf_ports: {}
+# For rules
+nf_custom_ruleset: {}

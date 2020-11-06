@@ -1,0 +1,9 @@
+[Unit]
+Description=Check update and set environments for report every day at night.
+
+[Timer]
+OnCalendar=daily
+Unit=check-updates.service
+
+[Install]
+WantedBy=multi-user.target

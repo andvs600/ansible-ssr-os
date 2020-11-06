@@ -1,0 +1,30 @@
+#############################################################################
+#
+# IBM Confidential
+# OCO Source Materials
+# 5724-C04
+#
+# Copyright IBM Corp. 2005
+# The source code for this program is not published or otherwise
+# divested of its trade secrets, irrespective of what has
+# been deposited with the U.S. Copyright Office.
+#
+#############################################################################
+
+# Data encryption key used for encrypting data sent between systems.
+# This key must be the same for all installations in an ITM environment.
+# The key is required and must be exactly 32 characters long.
+# If a parameter is left empty, the default encryption key is used.
+# Do not use the following characters in the key: $, =, or |
+#                      ....+....1....+....2....+....3..
+INSTALL_ENCRYPTION_KEY=IBMTivoliMonitoringEncryptionRZD
+
+# The product codes of the products to be installed.
+# This parameter can be given once for each product to install or
+# specifying 'all' will install all products for the given platform.
+# NOTE: Some products are not supported on some platforms.  Use the
+#       command line installer to determine what products are available
+#       on the platform.
+# Install all products
+INSTALL_PRODUCT=lz
+INSTALL_PRODUCT=ue

@@ -1,0 +1,33 @@
+syntax on
+filetype on
+filetype indent on
+
+set backup
+set scrolloff=3
+set laststatus=3
+set guifont=Terminus\ 14
+
+set wrap
+set ruler
+set showcmd
+set showmatch
+set linebreak
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set autoindent
+set expandtab
+set tabstop=4
+set shiftwidth=4
+au FileType *.bash,crontab,fstab,isolinux.cfg,ks* set noexpandtab tabstop=8 shiftwidth=
+
+set pastetoggle=
+autocmd CursorMoved * silent! exe printf("match Search /\\<%s\\>/", expand('<cword>'))
+
+set ffs=unix,dos
+set fencs=utf-8,cp1251
+set nocompatible
+
+hi NonText ctermfg=16 guifg=#4a4a59
+hi SpecialKey ctermfg=16 guifg=#4a4a59

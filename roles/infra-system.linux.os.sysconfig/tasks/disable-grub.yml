@@ -1,0 +1,27 @@
+---
+- name: Check if grub is present
+  stat: path=/etc/default/grub
+  register: hasgrub
+
+- name: Check if ipv6 is already modify
+  stat: path=/tmp/ipv6_change
+  register: haschange
+  
+- name: Disable IPv6 in grub
+  replace:
+    dest: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX="(.*)"'
+    replace: 'GRUB_CMDLINE_LINUX="\1 ipv6.disable=1"'
+    backup: yes
+  register: result
+  notify:
+    - grub2-mkconfig
+  when: hasgrub.stat.exists and ipv6_grub_disable and haschange.stat.exists == False
+
+- name: Set fact ipv6_disable
+  file:
+    path: /tmp/ipv6_change
+    state: touch
+    modification_time: now
+  ignore_errors: yes
+  when: result is succeeded and haschange.stat.exists == False

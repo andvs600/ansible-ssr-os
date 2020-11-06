@@ -1,0 +1,7 @@
+---
+- name: Stop and mask ntpd service
+  systemd:
+    name: ntpd
+    state: stopped
+    enabled: no
+    masked: yes

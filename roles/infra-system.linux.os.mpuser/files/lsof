@@ -1,0 +1,4 @@
+#!/bin/bash
+if /usr/bin/test -f /usr/sbin/lsof; 
+then /usr/bin/sudo /usr/sbin/lsof "${@}"; 
+fi;

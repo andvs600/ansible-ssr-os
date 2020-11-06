@@ -1,0 +1,191 @@
+---
+- name: Install Tmux
+  block:
+    - yum:
+        name: tmux
+        state: present
+      when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'
+
+    - dnf:
+        name: tmux
+        state: present
+      when: ansible_os_family == 'RedHat' and ansible_distribution_major_version == '8'
+  tags:
+    - tmux
+
+- name: Account root
+  user:
+    name: root
+    password: "{{ root_pass }}"
+    update_password: always
+  when: (root_mgmt is defined) and (root_mgmt | bool == true)
+  tags:
+    - root_mgmt
+
+- name: Manage account for administrators OS
+  block:
+    - name: Account adminos
+      user:
+        name: adminos
+        groups: adm, wheel
+        password: "{{ adminos_pass }}"
+        update_password: always
+        shell: /bin/bash
+        comment: 'For administrators infrastructure'
+        
+    - name: Set authorized key taken for adminos
+      authorized_key:
+        user: adminos
+        state: present
+        key: "{{ adminos_key }}"
+      when: adminos_key is defined
+
+    - name: Add rure for adminos account and validate the sudoers file before saving
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^adminos ALL='
+        insertafter: '^##\sSame\sthing\swithout\sa\spassword$'
+        line: 'adminos        ALL=(ALL)       NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+        
+    - name: Check if adminvp-smena sudoers rules exists
+      stat: path="/etc/sudoers.d/adminvp-smena"
+      register: sudoers_rules_status
+      
+    - name: Add rure for adminos account and validate the sudoers file before saving
+      lineinfile:
+        path: /etc/sudoers.d/adminvp-smena
+        state: absent
+        regexp: '^adminos ALL='
+        validate: /usr/sbin/visudo -cf %s
+      when: sudoers_rules_status.stat.exists == True
+      
+    - name: Copy vimrc
+      template:
+        src: vimrc.j2
+        dest: /home/adminos/.vimrc
+        owner: adminos
+        group: adminos
+        setype: user_home_t
+      tags:
+        - vimrc_conf
+        
+    - name: Copy tmux.conf
+      template:
+        src: tmux.conf.j2
+        dest: /home/adminos/.tmux.conf
+        owner: adminos
+        group: adminos
+        setype: screen_home_t
+      tags:
+        - tmux
+        - tmux_conf
+
+    - name: Add start Tmux in bashrc
+      blockinfile:
+        path: /home/adminos/.bashrc
+        insertafter: "# User specific aliases and functions"
+        block: |
+          [[ $- != *i* ]] && return
+          [[ -z "$TMUX" ]] && (tmux attach -t default || (tmux start-server \; source ~/.tmux.conf && tmux attach -t default))
+      tags:
+        - tmux
+        - tmux_conf      
+        
+  when: (adminos_mgmt is defined) and (adminos_mgmt | bool == true)
+  tags:
+    - adminos_mgmt
+    
+- name: Manage account for administrators asu
+  block:
+    - name: Account adminptk
+      user:
+        name: adminptk
+        groups: adm, wheel
+        password: "{{ adminptk_pass }}"
+        update_password: always
+        shell: /bin/bash
+        comment: 'For administrators asu'
+        
+    - name: Set authorized key taken for adminptk
+      authorized_key:
+        user: adminptk
+        state: present
+        key: "{{ adminptk_key }}"
+      when: adminptk_key is defined
+  when: (adminptk_mgmt is defined) and (adminptk_mgmt | bool == true)
+  tags:
+    - adminptk_mgmt
+
+- name: Manage accounts with specific sudoers rules
+  block:
+    - name: Account smenaptk
+      user:
+        name: smenaptk
+        groups: systemd-journal
+        password: "{{ smenaptk_pass }}"
+        update_password: always
+        shell: /bin/bash
+        comment: 'For shift staff'
+      tags:
+        - smena_mgmt
+        
+    - name: Set authorized key taken for smenaptk
+      authorized_key:
+        user: smenaptk
+        state: present
+        key: "{{ smenaptk_key }}"
+      tags:
+        - smena_mgmt
+         
+    - name: Group for adminvp[0,1,2]
+      group:
+        name: adminvp
+        state: present
+      
+    - name: Account adminvp0
+      user:
+        name: adminvp0
+        group: adminvp
+        password: "{{ adminvp0_pass }}"
+        password_lock: "{{ lock_pass | default('no') }}"
+        update_password: always
+        home: /home/adminvp
+        comment: 'For developers administrators'
+      tags:
+        - adminvp0_mgmt
+        
+    - name: Account adminvp1
+      user:
+        name: adminvp1
+        group: adminvp
+        password: "{{ adminvp_pass }}"
+        update_password: on_create
+        create_home: no
+        home: /home/adminvp
+        comment: 'For developers administrators'
+      tags:
+        - adminvp_mgmt
+         
+    - name: Account adminvp2
+      user:
+        name: adminvp2
+        group: adminvp
+        password: "{{ adminvp_pass }}"
+        update_password: on_create
+        create_home: no
+        home: /home/adminvp
+        comment: 'For developers administrators'
+      tags:
+        - adminvp_mgmt
+       
+    - name: Add sudoers rules
+      template:
+        force: yes
+        src: adminvp-smena.j2
+        dest: /etc/sudoers.d/adminvp-smena
+        validate: '/usr/sbin/visudo -cf %s'
+      tags:
+        - sudoers_mgmt
+  when: (adminvp_smena_mgmt is defined) and (adminvp_smena_mgmt | bool == true)

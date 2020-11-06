@@ -1,0 +1,8 @@
+---
+- name: Change various sysctl-settings for RHEL 7
+  sysctl:
+    name: '{{ item.key }}'
+    value: '{{ item.value }}'
+    state: present
+    reload: no
+  with_dict: '{{ sysctl_config_el7 }}'
