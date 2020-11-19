@@ -68,8 +68,7 @@ Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free sof
     [example-servers:vars]
     ansible_connection=ssh
     min_audit=true
-    # Регистрация только тех событий, при которых файл открывается только на запись и изменение атрибутов
-    # в директории '/etc':
+    # Регистрация только тех событий, при которых файл открывается только на запись и изменение атрибутов в директории '/etc':
     auditd_custom_rules=['-a exit,always -S open -F path=/etc/ -F perm=aw']
 ```
 
