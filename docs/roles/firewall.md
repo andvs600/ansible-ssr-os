@@ -40,9 +40,9 @@
 
     [example-servers:vars]
     ansible_connection=ssh
-    min_audit=true
-    # Регистрация только тех событий, при которых файл открывается только на запись и изменение атрибутов в директории '/etc':
-    auditd_custom_rules=['-a exit,always -S open -F path=/etc/ -F perm=aw']
+    activate_firewall=true
+    nf_int=true
+    nf_ports=['80','443']
     ```
 
 ??? example "Правила для iptables в RHEL/CentOS 7"
