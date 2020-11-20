@@ -17,6 +17,7 @@
 |firewalld_not_disabled | boolean        | undef (false)         | Оставляет брандмэуэр по умолчанию (firewalld), дальнейшая настройка не производится.     |
 |nf_ports               | array          | undef                 | Для открытия отдельного входящего порта.                                                 |
 |nf_custom_ruleset      | array          | undef                 | Для добавления своих правил.                                                             |
+|nf_int                 | boolean        | undef (true)          | Если не переопределен доступ возможен только из сети СПД `10.0.0.0/8`.                   |
 
 !!! failure
     На хостах c установренным Docker'ом необходимо настравить правила в ручную с использованием `firewalld`.
@@ -218,10 +219,10 @@
                     meta l4proto udp @th,15,16 123 counter accept comment "Accept NTP service"
                     meta l4proto { tcp, udp } @th,16,32 2049 counter accept comment "Accept NFS service"
                     ip protocol udp udp dport 67 counter accept comment "Accept DHCP service"
-                    {% if nf_int is undefined or nf_int is sameas true %}ip saddr 10.0.0.0/8 {% endif %}tcp dport ssh ct state new accept comment "Accept SSHD on port 22"
+                    ip saddr 10.0.0.0/8 tcp dport ssh ct state new accept comment "Accept SSHD on port 22"
                     tcp dport @custom_accept counter accept comment "Accept for custom reles"
-                    {% if nf_int is undefined or nf_int is sameas true %}ip saddr 10.0.0.0/8 {% endif %}tcp dport { 3389,9090,10000} accept comment "Accept administrators WebUI"
-                    {% if nf_int is undefined or nf_int is sameas true %}ip saddr 10.0.0.0/8 {% endif %}tcp dport { 5000,5647,8000,8140,8443,9090} accept comment "Accept Katello Agent"
+                    ip saddr 10.0.0.0/8 tcp dport { 3389,9090,10000} accept comment "Accept administrators WebUI"
+                    ip saddr 10.0.0.0/8 tcp dport { 5000,5647,8000,8140,8443,9090} accept comment "Accept Katello Agent"
                     meta l4proto { tcp, udp } @th,16,16 1918 accept comment "Accept ITM service"
                     tcp dport { 1919,1920,3660,6014,10110,14206,15001} accept comment "Accept ITM Agent"
                     tcp dport { 443,1556,2821,5432,9000,9001,10082,10102,13720,13724,13782} accept comment "Accept NETBACKUP Agent"

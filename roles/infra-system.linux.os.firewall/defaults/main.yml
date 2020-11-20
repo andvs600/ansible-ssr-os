@@ -1,6 +1,7 @@
 ---
 # For hots in SPD
 intranet: true
+nf_int: true
 # For ports
 nf_ports: {}
 # For rules
