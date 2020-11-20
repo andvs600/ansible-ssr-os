@@ -33,16 +33,15 @@
 
 ## Примеры
 
-### inventory/hosts
-
-```
+!!! example "inventory/hosts"
+    ```
     [example-servers]
     <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
 
     [example-servers:vars]
     ansible_connection=ssh
     websm_port='3389'
-```
+    ```
 
 ## Дополнительные материалы
 

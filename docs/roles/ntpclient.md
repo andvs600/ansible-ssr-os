@@ -33,16 +33,15 @@ Network Time Protocol (NTP) — протокол сетевого времени
 
 ## Примеры
 
-### inventory/hosts
-
-```
+!!! example "inventory/hosts"
+    ```
     [example-servers]
     <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
 
     [example-servers:vars]
     ansible_connection=ssh
     ntp_servers=['1.2.3.4','4.3.2.1']
-```
+    ```
 
 ## Дополнительные материалы
 

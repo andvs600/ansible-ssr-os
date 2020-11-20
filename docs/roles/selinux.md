@@ -32,9 +32,8 @@
 
 ## Примеры
 
-### inventory/hosts
-
-```
+!!! example "inventory/hosts"
+    ```
     [example-servers]
     <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
 
@@ -42,7 +41,7 @@
     ansible_connection=ssh
     selinux_state='enforcing'
     selinux_policy='targeted'
-```
+    ```
 
 ## Дополнительные материалы
 

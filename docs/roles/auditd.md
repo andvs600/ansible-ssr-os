@@ -56,9 +56,8 @@
 
 ## Примеры
 
-### inventory/hosts
-
-```
+!!! example "inventory/hosts"
+    ```
     [example-servers]
     <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
 
@@ -67,7 +66,7 @@
     min_audit=true
     # Регистрация только тех событий, при которых файл открывается только на запись и изменение атрибутов в директории '/etc':
     auditd_custom_rules=['-a exit,always -S open -F path=/etc/ -F perm=aw']
-```
+    ```
 
 ## Дополнительные материалы
 
