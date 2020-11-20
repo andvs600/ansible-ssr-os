@@ -14,7 +14,7 @@ Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free sof
 Network Time Protocol (NTP) — протокол сетевого времени. Роль настраивает клиент NTP прописывая сервера точного времени и настраивает временную зону на целевом узле. 
 
 !!! note
-    *По умолчанию используется пул `ru.pool.ntp.org` и сервера `0.ru.pool.ntp.org, 1.ru.pool.ntp.org, 2.ru.pool.ntp.org, 3.ru.pool.ntp.org` российского Интернет сегмента.*
+    По умолчанию используется пул `ru.pool.ntp.org` и сервера `0.ru.pool.ntp.org, 1.ru.pool.ntp.org, 2.ru.pool.ntp.org, 3.ru.pool.ntp.org` российского Интернет сегмента.
 
 ## Параметры
 |Название переменной               | Тип переменной | Значения по умолчанию | Описание                                                                                 |
@@ -24,7 +24,8 @@ Network Time Protocol (NTP) — протокол сетевого времени
 |chrony_config_extra_options       | array          | undef                 | Дополнительные опции указываются как ключ значение.                                      |
 |t_zone                            | string         | 'Europe/Moscow'       | Задает временную зону.                                                                   |
 
-
+!!! attention
+    Переменная `ntp_pool` применяется только совместно с переменной `ntp_servers`.
 
 ## Теги
 |Тег                  | Описание                                          |

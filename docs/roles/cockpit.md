@@ -1,4 +1,4 @@
-# 
+# Cockpit
 
 Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free software: Everyone is permitted to copy and distribute verbatim copies of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License.
 
@@ -11,11 +11,43 @@ Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free sof
 5. [Дополнительные материалы](#дополнительные-материалы)
 
 ## Общее описание
+[Cockpit](https://cockpit-project.org/) — простой в использовании, но мощный удаленный менеджер для серверов GNU/Linux, это интерактивный пользовательский интерфейс для мониторинга и администрирования сервера, который предлагает LIVE-сеанс Linux через веб-браузер.
+
+Особенности Cockpit:
+
+* Позволяет управлять несколькими серверами в одном сеансе Cockpit.
+* Доступна веб-оболочка прямо в окне терминала.
+* Можно управлять контейнерами через Docker.
+* Доступно удобное управление учетными записями системных пользователей.
+* Сбор информацию о производительности системы с использованием среды Performance Co-Pilot и отображение собранной информации на графике.
+* Поддержка сбора конфигурации системы и диагностической информации с помощью sos-report.
+* Также поддерживается кластер Kubernetes и кластер Openshift v3.
+* Позволяет изменять настройки сети и многое другое.
 
 ## Параметры
+|Название переменной  | Тип переменной | Значения по умолчанию | Описание                                     |
+|:--------------------|:--------------:|:---------------------:|:---------------------------------------------|
+|websm_port           | string         | 3389                  | Задает альтернативный порт для доступа к UI. | 
 
 ## Теги
+|Тег                  | Описание                                          |
+|:--------------------|:--------------------------------------------------|
+|cockpit              | Устанавливает интерфейт управления.               |
 
 ## Примеры
 
+### inventory/hosts
+
+```
+    [example-servers]
+    <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
+
+    [example-servers:vars]
+    ansible_connection=ssh
+    websm_port='3389'
+```
+
 ## Дополнительные материалы
+
+- [Cockpit guide](https://cockpit-project.org/guide/latest/)
+- [Cockpit – упрощение типичных административных задач](https://habr.com/ru/post/471220/)

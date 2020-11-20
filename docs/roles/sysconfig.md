@@ -13,7 +13,8 @@ Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free sof
 ## Общее описание
 Роль меняет системные параметры в ОС. Например - такие параметры как размер сегмента разделяемой памяти, ограничение на число запущенных процессов, а также включать функции наподобие маршрутизации и т.д. Переопределяются необходимые параметры в конфигурационном файле '/etc/sysctl.conf'.
 
-Основные параметры перечислены в переменных sysctl_config_el7 для CentOS 7 и sysctl_config_el8 для CentOS 8 в файле roles/sysconfig/defaults/main.yml.
+!!! info
+    Основные параметры перечислены в переменных sysctl_config_el7 для CentOS 7 и sysctl_config_el8 для CentOS 8 в файле roles/sysconfig/defaults/main.yml.
 
 ## Параметры
 |Название переменной               | Тип переменной | Значения по умолчанию | Описание                                                                                |
