@@ -1,4 +1,4 @@
-# SELinux
+# Управление SELINUX в ОС CentOS/RHEL с помощью Ansible
 
 ??? abstract
     1. [Общее описание](#общее-описание)

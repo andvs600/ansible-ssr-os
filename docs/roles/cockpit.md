@@ -1,4 +1,4 @@
-# Cockpit
+# Установка и настройка WebUI SM на CentOS/RHEL с помощью Ansible
 
 ??? abstract
     1. [Общее описание](#общее-описание)

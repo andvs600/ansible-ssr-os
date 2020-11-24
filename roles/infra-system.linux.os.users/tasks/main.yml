@@ -114,6 +114,36 @@
         state: present
         key: "{{ adminptk_key }}"
       when: adminptk_key is defined
+
+    - name: Copy vimrc
+      template:
+        src: vimrc.j2
+        dest: /home/adminptk/.vimrc
+        owner: adminptk
+        setype: user_home_t
+      tags:
+        - vimrc_conf
+        
+    - name: Copy tmux.conf
+      template:
+        src: tmux.conf.j2
+        dest: /home/adminptk/.tmux.conf
+        owner: adminptk
+        setype: screen_home_t
+      tags:
+        - tmux_adminptk
+        - tmux_conf
+
+    - name: Add start Tmux in bashrc
+      blockinfile:
+        path: /home/adminptk/.bashrc
+        insertafter: "# User specific aliases and functions"
+        block: |
+          [[ -z "$TMUX" ]] && (tmux attach -t admin || (tmux start-server \; source ~/.tmux.conf && tmux attach -t admin))
+      tags:
+        - tmux_adminptk
+        - tmux_conf  
+      when: (adminptk_tmux is defined) and (adminptk_tmux | bool == true)  
   when: (adminptk_mgmt is defined) and (adminptk_mgmt | bool == true)
   tags:
     - adminptk_mgmt
@@ -138,6 +168,36 @@
         key: "{{ smenaptk_key }}"
       tags:
         - smena_mgmt
+
+    - name: Copy vimrc
+      template:
+        src: vimrc.j2
+        dest: /home/smenaptk/.vimrc
+        owner: smenaptk
+        setype: user_home_t
+      tags:
+        - vimrc_conf
+        
+    - name: Copy tmux.conf
+      template:
+        src: tmux.conf.j2
+        dest: /home/smenaptk/.tmux.conf
+        owner: smenaptk
+        setype: screen_home_t
+      tags:
+        - tmux_smenaptk
+        - tmux_conf
+
+    - name: Add start Tmux in bashrc
+      blockinfile:
+        path: /home/smenaptk/.bashrc
+        insertafter: "# User specific aliases and functions"
+        block: |
+          [[ -z "$TMUX" ]] && (tmux attach -t smena || (tmux start-server \; source ~/.tmux.conf && tmux attach -t smena))
+      tags:
+        - tmux_smenaptk
+        - tmux_conf  
+      when: (smenaptk_tmux is defined) and (smenaptk_tmux | bool == true)  
          
     - name: Group for adminvp[0,1,2]
       group:
