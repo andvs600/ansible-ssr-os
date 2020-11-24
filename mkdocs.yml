@@ -9,6 +9,9 @@ use_directory_urls: false
 
 nav:
     - Общее описание: 'index.md'
+    - Как применять:
+      - Используя `bootstrap` хост: 'ansible/engine.md'
+      - Используя RH Satellite/Katello: 'ansible/satellite.md'
     - Роли:
       - Auditd: 'roles/auditd.md'
       - Cockpit: 'roles/cockpit.md'
