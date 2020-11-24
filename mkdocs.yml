@@ -76,4 +76,11 @@ markdown_extensions:
   - pymdownx.smartsymbols
   - pymdownx.superfences
   - pymdownx.tabbed
-
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.keys
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - markdown_blockdiag:
+      format: svg
+  - markdown_include.include
