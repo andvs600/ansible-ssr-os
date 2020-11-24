@@ -43,4 +43,20 @@ sshd_deny_users         Задает список пользователей к�
 
 ## Примеры
 
+!!! example "inventory/hosts"
+    ```
+    [example-servers]
+    <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
+
+    [example-servers:vars]
+    ansible_connection=ssh
+    mpserver=['mpuser@<10.10.10.*>','mpuser@<10.10.10.1>']
+    ```
+
+### С неустановленными обновлениями.
+![updates_not](images/motd_updates_not_install.png)
+
+### С установленными обновлениями.
+![updates](images/motd_updates_install.png)
+
 ## Дополнительные материалы
