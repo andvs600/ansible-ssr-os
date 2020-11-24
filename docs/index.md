@@ -1,7 +1,20 @@
 # Общее описание
 Данная документация описывает параметры при использование Ansible Roles для базовой настройки серверов на базе операционных систем Red Hat. Роли содержат сценарии по автоматизации ручных операций. За счет автоматизации уменьшаются время и трудозатраты на подготовку ПТК, снижаться риск влияния “человеческого фактора”.
 
-![VSCode](images/ansible.png)
+## Название ролей
+
+* infra-system.linux.os.auditd
+* infra-system.linux.os.cockpit
+* infra-system.linux.os.firewall
+* infra-system.linux.os.itma
+* infra-system.linux.os.mpuser
+* infra-system.linux.os.netbackup
+* infra-system.linux.os.ntpclient
+* infra-system.linux.os.selinux
+* infra-system.linux.os.sshd
+* infra-system.linux.os.sysconfig
+* infra-system.linux.os.users
+
 
 !!! tip
     Для создания закладки в браузере на данное руководство: ++ctrl+d++
