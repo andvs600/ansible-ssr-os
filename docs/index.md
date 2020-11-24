@@ -6,18 +6,21 @@
 
 ## Структура проекта
 
-Роли: 
-- Auditd
-- Cockpit
-- Firewall
-- NTPclient
-- SELinux
-- SSHD
-- Sysconfig
-- Users account
-- ITMA
-- NetBackup
-- MPuser
+blockdiag {
+  orientation = portrait
+
+  Роли -> Auditd;
+          Cockpit;
+          Firewall;
+          NTPclient;
+          SELinux;
+          SSHD;
+          Sysconfig;
+          Users account;
+          ITMA;
+          NetBackup;
+          MPuser;
+}
 
 ## Дополнительные материалы
 
