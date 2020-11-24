@@ -4,7 +4,9 @@
 !!! tip
     Для создания закладки в браузере на данное руководство: ++ctrl+d++
 
-## Структура проекта
+## Ansible
+
+![VSCode](images/ansible.png)
 
 blockdiag {
   node_width = 120;
