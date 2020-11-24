@@ -7,7 +7,13 @@
 ## Структура проекта
 
 blockdiag {
-  orientation = portrait
+  node_width = 120;
+  node_height = 40;
+  span_width = 100;
+  span_height = 10;
+  default_shape = roundedbox
+  default_fontsize = 10;
+  Users_account [label = "Users account"];
 
   Roles -> Auditd;
   Roles -> Cockpit;
@@ -16,7 +22,7 @@ blockdiag {
   Roles -> SELinux;
   Roles -> SSHD;
   Roles -> Sysconfig;
-  Roles -> Users account;
+  Roles -> Users_account;
   Roles -> ITMA;
   Roles -> NetBackup;
   Roles -> MPuser;
