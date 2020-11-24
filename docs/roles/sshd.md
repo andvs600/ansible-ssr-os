@@ -55,10 +55,10 @@
     ```
 
 ### С неустановленными обновлениями.
-![updates_not](images/motd_updates_not_install.png)
+![updates_not](../images/motd_updates_not_install.png)
 
 ### С установленными обновлениями.
-![updates](images/motd_updates_install.png)
+![updates](../images/motd_updates_install.png)
 
 ## Дополнительные материалы
 
