@@ -1,4 +1,4 @@
-# 
+# Установка агента СРК в ОС CentOS/RHEL с помощью Ansible
 
 Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free software: Everyone is permitted to copy and distribute verbatim copies of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License.
 
