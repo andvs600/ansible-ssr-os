@@ -72,7 +72,7 @@
     adminvp_smena_mgmt=true
     smenaptk_pass='$6$oGnmjGVGD.../6WKDvcGqAIq...cmxSsyzLozOYo0'
     smenaptk_tmux=true
-    sudo_services_drive='httpd'
+    sudo_services_drive=['httpd']
     ```
 
 ??? example "Пример шаблона sudoers"

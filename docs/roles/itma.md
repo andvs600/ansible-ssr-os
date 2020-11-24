@@ -60,7 +60,7 @@
 
     [example-servers:vars]
     ansible_connection=ssh
-    srv_mon='gvc-rtems-01.gvc.oao.rzd'
+    srv_mon=['gvc-rtems-01.gvc.oao.rzd']
     ```
 
 ## Дополнительные материалы
