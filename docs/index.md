@@ -9,17 +9,17 @@
 blockdiag {
   orientation = portrait
 
-  Роли -> Auditd;
-          Cockpit;
-          Firewall;
-          NTPclient;
-          SELinux;
-          SSHD;
-          Sysconfig;
-          Users account;
-          ITMA;
-          NetBackup;
-          MPuser;
+  Roles -> Auditd;
+  Roles -> Cockpit;
+  Roles -> Firewall;
+  Roles -> NTPclient;
+  Roles -> SELinux;
+  Roles -> SSHD;
+  Roles -> Sysconfig;
+  Roles -> Users account;
+  Roles -> ITMA;
+  Roles -> NetBackup;
+  Roles -> MPuser;
 }
 
 ## Дополнительные материалы
