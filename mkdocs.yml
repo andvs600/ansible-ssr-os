@@ -52,7 +52,7 @@ extra:
 extra_css:
   - material/assets/css/main.css
   - material/assets/libs/magnific-popup/magnific-popup.css
-  - docs/assets/css/pdf.css
+  - material/assets/css/pdf.css
 
 extra_javascript:
   - material/assets/libs/jquery/jquery-3.4.0.min.js
