@@ -10,20 +10,28 @@ UPDATES_SEC_COUNT=0
 # Set environments
 UPDATES_COUNT=$(timeout 30s /usr/bin/yum --debuglevel 2 check-update --quiet 2>/dev/null | grep -v "^$" | wc -l) ;
 [[ -z "${UPDATES_COUNT}" ]] && UPDATES_COUNT='0' || UPDATES_COUNT=${UPDATES_COUNT}
+{% if  %}
 UPDATES_SEC_COUNT=$(timeout 30s /usr/bin/yum --debuglevel 2 --security check-update --quiet 2>/dev/null | grep -v "^$" | wc -l) ;
 [[ -z "${UPDATES_SEC_COUNT}" ]] && UPDATES_SEC_COUNT='0' || UPDATES_SEC_COUNT=${UPDATES_SEC_COUNT}
+{% endif %}
 
 # List updates available
 grep -P '(^UPDATES_COUNT)' /etc/environment 2>/dev/null ; 
 ret_count=$?
+{% if  %}
 grep -P '(^UPDATES_SEC_COUNT)' /etc/environment 2>/dev/null ; 
 ret_count=$?
+{% endif %}
 
 if [ ${ret_count} -ne 0 ]
   then
    echo -e "UPDATES_COUNT=${UPDATES_COUNT}" >> /etc/environment ;
+   {% if  %}
    echo -e "UPDATES_SEC_COUNT=${UPDATES_SEC_COUNT}" >> /etc/environment ;
+   {% endif %}
   else
     sed -i -r "s/.*UPDATES_COUNT.*/UPDATES_COUNT=${UPDATES_COUNT}/" /etc/environment ;
+    {% if  %}
     sed -i -r "s/.*UPDATES_SEC_COUNT.*/UPDATES_SEC_COUNT=${UPDATES_SEC_COUNT}/" /etc/environment ;
+    {% endif %}
 fi
