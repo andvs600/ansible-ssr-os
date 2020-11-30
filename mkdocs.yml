@@ -51,7 +51,14 @@ theme:
 extra:
   search:
     language: 'ru, en'
-
+  social:
+    - icon: material/assets/icons/readme
+      link: http://gvc-tex-docs-01.gvc.oao.rzd/
+    - icon: material/assets/icons/github
+      link: https://github.com/D34m0nN0n3/ansible-ssr-os/
+    - icon: material/assets/icons/gitlab
+      link: https://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os/
+    
 extra_css:
   - material/assets/css/main.css
   - material/assets/libs/magnific-popup/magnific-popup.css
