@@ -16,6 +16,9 @@
 * infra-system.linux.os.users
 
 
+!!! hint
+    Найти проект можно в поиске по имени [D34m0nN0n3/ansible-ssr-os](https://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os) на [GitLab](https://git.rzd/).
+
 !!! tip
     Для создания закладки в браузере на данное руководство: ++ctrl+d++
 
