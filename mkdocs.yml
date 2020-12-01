@@ -59,15 +59,15 @@ extra:
     - icon: fontawesome/brands/gitlab
       link: https://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os/
     
-extra_css:
-  - material/assets/css/main.css
-  - material/assets/libs/magnific-popup/magnific-popup.css
-  - material/assets/css/pdf.css
+#extra_css:
+#  - material/assets/css/main.css
+#  - material/assets/libs/magnific-popup/magnific-popup.css
+#  - material/assets/css/pdf.css
 
-extra_javascript:
-  - material/assets/libs/jquery/jquery-3.4.0.min.js
-  - material/assets/libs/magnific-popup/jquery.magnific-popup.min.js
-  - material/assets/js/main.js
+#extra_javascript:
+#  - material/assets/libs/jquery/jquery-3.4.0.min.js
+#  - material/assets/libs/magnific-popup/jquery.magnific-popup.min.js
+#  - material/assets/js/main.js
 
 markdown_extensions:
   - admonition
