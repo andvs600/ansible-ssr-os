@@ -16,8 +16,10 @@
 * infra-system.linux.os.users
 
 
-!!! hint
-    Найти проект можно в поиске по имени [D34m0nN0n3/ansible-ssr-os](https://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os) на [GitLab](https://git.rzd/).
+!!! hint 
+    В правом нижнем углу расположены две пиктограммы для перехода к проекту в Git. 
+    На GitHub: <div style="width:7%">![github](images/github.png)</div>
+    На GitLab (ГВЦ): <div style="width:7%">![gitlab](images/gitlab.png)</div>
 
 !!! tip
     Для создания закладки в браузере на данное руководство: ++ctrl+d++

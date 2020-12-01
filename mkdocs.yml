@@ -52,8 +52,6 @@ extra:
   search:
     language: 'ru, en'
   social:
-    - icon: fontawesome/brands/readme
-      link: http://gvc-tex-docs-01.gvc.oao.rzd/
     - icon: fontawesome/brands/github
       link: https://github.com/D34m0nN0n3/ansible-ssr-os/
     - icon: fontawesome/brands/gitlab
