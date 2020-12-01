@@ -1,2 +1,1 @@
 ---
-temp_str: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,hexdigits,punctuation length=24') }}"
