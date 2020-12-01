@@ -17,9 +17,8 @@
 
 
 !!! hint 
-    В правом нижнем углу расположены две пиктограммы для перехода к проекту в Git. 
-    На GitHub: <div style="width:7%">![github](images/github.png)</div>
-    На GitLab (ГВЦ): <div style="width:7%">![gitlab](images/gitlab.png)</div>
+    В правом нижнем углу расположены две пиктограммы для перехода к проекту в Git:
+    <figure><img src="images/github.png" width="48" /><figcaption>GitHub</figcaption></figure><figure><img src="images/gitlab.png" width="48" /><figcaption>GitLab</figcaption></figure>
 
 !!! tip
     Для создания закладки в браузере на данное руководство: ++ctrl+d++
