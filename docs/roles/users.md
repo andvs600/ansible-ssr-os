@@ -75,6 +75,12 @@
     sudo_services_drive=['httpd']
     ```
 
+!!! example "Пример генирации хеша для пароля по словарю"
+    python -c 'import crypt; print(crypt.crypt("My Password"))'
+
+!!! example "Пример генирации хеша для пароля с интерактивным водом"
+    python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())' 
+
 ??? example "Пример шаблона sudoers"
     ```
     #{{ ansible_managed }}
