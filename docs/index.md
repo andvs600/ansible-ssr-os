@@ -25,8 +25,6 @@
 
 ## Дополнительные материалы
 
-- [Ansible installation guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-- [Ansible Documentations](https://docs.ansible.com)
-- [Ansible tags](https://docs.ansible.com/ansible/latest/user_guide/playbooks_tags.html)
-- [Connection methods](https://docs.ansible.com/ansible/latest/user_guide/connection_details.html)
-- [Ansible passing sudo](https://8gwifi.org/docs/ansible-sudo-ssh-password.jsp)
+- [Git Documentations](https://git-scm.com/book/en/v2)
+- [GitHub Documentations](https://docs.github.com/en)
+- [GitLab Documentations](https://docs.gitlab.com/)
