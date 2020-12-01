@@ -1,6 +1,6 @@
 ---
 - set_fact:
-    rand_pass: "{{ temp_str }}"
+    rand_pass: "{{ lookup('password', '/dev/null chars=ascii_letters,digits,hexdigits,punctuation length=24') }}"
 
 - name: Install aditionals packages
   yum:
