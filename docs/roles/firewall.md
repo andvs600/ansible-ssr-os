@@ -34,7 +34,7 @@
 ## Примеры
 
 !!! example "inventory/hosts"
-    ```
+    ``` ini
     [example-servers]
     <host_name> ansible_ssh_host=<host_ip> ansible_ssh_user=<user_name_for_connect>
 
@@ -46,7 +46,7 @@
     ```
 
 ??? example "Правила для iptables в RHEL/CentOS 7"
-    ```
+    ``` cfg
     IPT=iptables
     $IPT -F
     $IPT -t nat -F
@@ -147,7 +147,7 @@
     ```
 
 ??? example "Правила для nftables в RHEL/CentOS 8"
-    ```
+    ``` cfg
     # More documentations: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_networking/getting-started-with-nftables_configuring-and-managing-networking
     # Flush the rule set
     flush ruleset
