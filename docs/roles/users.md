@@ -76,10 +76,14 @@
     ```
 
 !!! example "Пример генирации хеша для пароля по словарю"
+    ```bash
     python -c 'import crypt; print(crypt.crypt("My Password"))'
+    ```
 
 !!! example "Пример генирации хеша для пароля с интерактивным водом"
+    ```bash
     python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())' 
+    ```
 
 ??? example "Пример шаблона sudoers"
     ```
