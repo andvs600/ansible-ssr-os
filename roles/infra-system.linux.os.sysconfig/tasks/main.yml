@@ -109,7 +109,7 @@
   seboolean:
     name: virt_sandbox_use_all_caps
     state: yes
-    persistent: yes
+    persistent: no
 
 - name: Allow virt to use nfs
   seboolean:
