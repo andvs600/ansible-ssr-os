@@ -28,12 +28,30 @@
     state: present
     key: "{{ mpuser_key }}"
 
-- name: Add sudoers rules
-  template:
-    force: yes
-    src: ../templates/maxpatrol.rule.j2
-    dest: /etc/sudoers.d/maxpatrol
-    validate: '/usr/sbin/visudo -cf %s'  
+- name: Sudo rules
+  block:
+    - name: Add sudoers rules
+      template:
+        force: yes
+        src: ../templates/maxpatrol.rule.j2
+        dest: /etc/sudoers.d/maxpatrol
+        validate: '/usr/sbin/visudo -cf %s'
+
+  rescue:
+    - name: Recover sudoers rules
+      file:
+        path: /etc/sudoers.d/maxpatrol
+        state: absent
+
+    - name: Send mail if add rules failed
+      community.general.mail:
+        host: mx.gvc.rzd
+        port: 25
+        from: no-reply@gvc.rzd
+        to: 
+        - none@gvc.rzd
+        subject: Ansible-report for mpuser role
+        body: On the host {{ ansible_hostname }} it is not possible to create a sudoers rules.
 
 - name: Allow connect only from MaxPatrol server
   blockinfile:
