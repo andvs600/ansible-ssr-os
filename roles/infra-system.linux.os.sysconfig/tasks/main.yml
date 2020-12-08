@@ -103,7 +103,7 @@
   seboolean:
     name: domain_kernel_load_modules
     state: yes
-    persistent: yes
+    persistent: no
 
 - name: Allow virt to sandbox use all caps
   seboolean:
