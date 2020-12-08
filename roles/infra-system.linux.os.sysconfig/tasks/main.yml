@@ -115,7 +115,7 @@
   seboolean:
     name: virt_use_nfs
     state: yes
-    persistent: yes
+    persistent: no
 
 - name: Set specific settings override sysctl.conf
   sysctl:
