@@ -99,23 +99,26 @@
   tags:
     - ip_forward
 
-- name: Allow domain to kernel load modules
-  seboolean:
-    name: domain_kernel_load_modules
-    state: yes
-    persistent: no
+- name: Manage SELinux
+  block:
+    - name: Allow domain to kernel load modules
+      seboolean:
+        name: domain_kernel_load_modules
+        state: yes
+        persistent: yes
 
-- name: Allow virt to sandbox use all caps
-  seboolean:
-    name: virt_sandbox_use_all_caps
-    state: yes
-    persistent: no
+    - name: Allow virt to sandbox use all caps
+      seboolean:
+        name: virt_sandbox_use_all_caps
+        state: yes
+        persistent: yes
 
-- name: Allow virt to use nfs
-  seboolean:
-    name: virt_use_nfs
-    state: yes
-    persistent: no
+    - name: Allow virt to use nfs
+      seboolean:
+        name: virt_use_nfs
+        state: yes
+        persistent: yes
+  ignore_errors: true
 
 - name: Set specific settings override sysctl.conf
   sysctl:
