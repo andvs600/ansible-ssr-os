@@ -30,28 +30,35 @@
 
 - name: Sudo rules
   block:
+    - name: Find duplicate rules
+      command:
+        cmd: 'grep MPROOTCMD /etc/sudoers'
+      register: presence
+      changed_when: false
+      ignore_errors: true
+
     - name: Add sudoers rules
       template:
         force: yes
         src: ../templates/maxpatrol.rule.j2
         dest: /etc/sudoers.d/maxpatrol
         validate: '/usr/sbin/visudo -cf %s'
+      when: presence is failed
 
-  rescue:
-    - name: Recover sudoers rules
-      file:
-        path: /etc/sudoers.d/maxpatrol
-        state: absent
+    - name: Check sudoers
+      command: /usr/sbin/visudo -cf /etc/sudoers
+      register: sudo_check
 
     - name: Send mail if add rules failed
-      community.general.mail:
+      mail:
         host: mx.gvc.rzd
         port: 25
         from: no-reply@gvc.rzd
-        to: 
-        - none@gvc.rzd
+        to: {{ report_email }}
         subject: Ansible-report for mpuser role
         body: On the host {{ ansible_hostname }} it is not possible to create a sudoers rules.
+      when: (presence is not failed) and (report_email is defined)
+
 
 - name: Allow connect only from MaxPatrol server
   blockinfile:
