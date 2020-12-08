@@ -54,7 +54,7 @@
         host: mx.gvc.rzd
         port: 25
         from: no-reply@gvc.rzd
-        to: {{ report_email }}
+        to: "{{ report_email }}"
         subject: Ansible-report for mpuser role
         body: On the host {{ ansible_hostname }} it is not possible to create a sudoers rules.
       when: (presence is not failed) and (report_email is defined)
