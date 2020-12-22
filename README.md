@@ -34,6 +34,7 @@ Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free sof
 9.  [infra-system.linux.os.selinux](docs/roles/selinux.md)
 10. [infra-system.linux.os.itma](docs/roles/itma.md)
 11. [infra-system.linux.os.netbackup](docs/roles/netbackup.md)
+12. [infra-system.linux.os.kaspersky](docs/roles/kav.md)
 
 ## Дополнительные материалы
 
