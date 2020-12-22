@@ -1,0 +1,175 @@
+---
+- name: Kaspersky Uninstall/Install/Reinstall
+  block:
+    - name: Kaspersky package remove
+      package:
+        name:
+          - kesl
+          - klnagent64
+        state: absent
+
+    - name: Kaspersky dir remove
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - "/etc/opt/kaspersky"
+        - "/opt/kaspersky"
+        - "/var/opt/kaspersky"
+
+    - meta: end_host
+      when: (uninstall_only is defined) and (uninstall_only | bool == true)
+
+    - name: Install dependencies
+      yum:
+        name: perl
+        state: present
+
+    - name: KLN agent install (repos)
+      yum:
+        name: klnagent64
+        state: present
+      register: result
+      ignore_errors: True
+
+#    - name: KLN agent install (http)
+#      yum:
+#        name: http://10.248.11.69/pub/klnagent64-11.0.0-29.x86_64.rpm
+#        state: present
+    - fail:
+        msg: Package klnagent64 haven`t been installed. Please check proper repository connection. (Use key vmbase/hwbase for Satellite registration)
+      when: result is failed
+
+    - meta: end_play
+      when: result is failed
+
+    - name: Agent answers
+      template:
+        src: "agent.j2"
+        dest: "/tmp/autoconfig.conf"
+        owner: root
+        group: root
+
+    - name: Agent configure
+      command: /opt/kaspersky/klnagent64/lib/bin/setup/klnagent_setup.pl --auto && /opt/kaspersky/klnagent64/bin/klmover -address {{ KLNAGENT_SERVER | default('gvc_kav_03.gvc.oao.rzd') }}
+      environment:
+        KLAUTOANSWERS: /tmp/autoconfig.conf
+
+    - name: Remove answers
+      file:
+        state: absent
+        path: /tmp/autoconfig.conf
+
+    - name: KESL install (repos)
+      yum:
+        name: kesl
+        state: present
+      register: result
+      ignore_errors: True
+
+#    - name: KESL install (http)
+#      yum:
+#        name: http://10.248.11.69/pub/kesl-10.1.1-6421.x86_64.rpm
+#        state: present
+    - fail:
+        msg: Package kesl haven`t been installed. Please check proper repository connection. (Use key vmbase/hwbase for Satellite registration)
+      when: result is failed
+
+    - meta: end_play
+      when: result is failed
+
+    - name: Set kesl ini file
+      template:
+        src: "kesl.j2"
+        dest: "/tmp/kesl.ini"
+        owner: root
+        group: root
+
+    - name: Kesl configure
+      command: /opt/kaspersky/kesl/bin/kesl-setup.pl --autoinstall=/tmp/kesl.ini
+      #ignore_errors: True
+
+    - name: Remove ini
+      file:
+        state: absent
+        path: /tmp/kesl.ini
+  when: (control_only is undefined) or ((control_only is defined) and (control_only | bool == false))
+
+- name: Kaspersky control
+  block:
+    - name: All systems go
+      block:
+        - name: Start and enable services
+          service:
+            name: "{{ item }}"
+            state: started
+            enabled: yes
+          with_items:
+            - kesl-supervisor
+            - klnagent64
+
+        - meta: end_host
+      when: (all_up_enabled is defined) and (all_up_enabled | bool == true)
+
+    - name: Full back
+      block:
+        - name: Stop and disable services
+          service:
+            name: "{{ item }}"
+            state: stopped
+            enabled: no
+          with_items:
+            - kesl-supervisor
+            - klnagent64
+
+        - meta: end_host
+      when: (all_up_enabled is defined) and (all_up_enabled | bool == false)
+
+    - name: Agent only
+      block:
+        - name: KLN Agent
+          service:
+            name: klnagent64
+            state: started
+            enabled: yes
+
+        - name: KESL
+          service:
+            name: kesl-supervisor
+            state: stopped
+            enabled: no
+
+        - meta: end_host
+      when: (agent_up_enabled is defined) and (agent_up_enabled | bool == true)
+
+    - name: Agent and KESL enabled and stoped
+      block:
+        - name: Stop and enable services
+          service:
+            name: "{{ item }}"
+            state: stopped
+            enabled: yes
+          with_items:
+            - kesl-supervisor
+            - klnagent64
+
+        - meta: end_host
+      when: (all_stop is defined) and (all_stop | bool == true)
+
+    - name: KESL enable and stoped
+      block:
+        - name: KLN Agent
+          service:
+            name: klnagent64
+            state: started
+            enabled: yes
+
+        - name: KESL
+          service:
+            name: kesl-supervisor
+            state: stopped
+            enabled: yes
+
+        - meta: end_host
+      when:  (kesl_stop is defined) and (kesl_stop | bool == true)
+  when: ((control_only is defined) and (control_only | bool == true)) or ((control is defined) and (control | bool == true))
