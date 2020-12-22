@@ -14,6 +14,7 @@
 * infra-system.linux.os.sshd
 * infra-system.linux.os.sysconfig
 * infra-system.linux.os.users
+* infra-system.linux.os.kaspersky
 
 
 !!! hint 
