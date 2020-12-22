@@ -23,6 +23,7 @@ nav:
       - Users account: 'roles/users.md'
       - ITMA: 'roles/itma.md'
       - NetBackup: 'roles/netbackup.md'
+      - Kaspersky: 'roles/kav.md'
       - MPuser: 'roles/mpuser.md'
     - Дополнительные материалы: 'seealso.md'
 
