@@ -1,0 +1,3 @@
+[submodule "Kaspersky_role"]
+	path = Kaspersky_role
+	url = https://github.com/NikSonn/Kaspersky_role.git
