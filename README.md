@@ -1,4 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/D34m0nN0n3/ansible-ssr-os/issues)
+[![HitCount](http://hits.dwyl.com/D34m0nN0n3/ansible-ssr-os.svg)](http://hits.dwyl.com/D34m0nN0n3/ansible-ssr-os)
 
 # Configure RHEL/CentOS
 Copyright (C) 2020 Dmitriy Prigoda deamon.none@gmail.com This script is free software: Everyone is permitted to copy and distribute verbatim copies of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License.
