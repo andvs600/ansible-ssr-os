@@ -1,5 +1,6 @@
 site_name: Configuration RHEL/CentOS
 site_description: "Настройка сервера на базе OC RHEL/CentOS"
+site_url: http://gvc-tex-docs-01.gvc.oao.rzd/
 copyright: Copyright &copy; <a href="https://github.com/D34m0nN0n3">Dmitriy Prigoda</a>.
 
 repo_name: "ansible-ssr-os"
