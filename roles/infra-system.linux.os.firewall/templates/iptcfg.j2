@@ -80,10 +80,34 @@ $IPT -A OUTPUT -d 127.0.0.1 -j ACCEPT
 $IPT -t mangle -A PREROUTING -s 127.0.0.0/8 ! -i lo -j DROP
 $IPT -t mangle -A PREROUTING -s 0.0.0.0/8 -j DROP
 $IPT -t mangle -A PREROUTING -s 169.254.0.0/16 -j DROP
+# ! 172.17.0.0/16, ! 172.18.0.0/16
 $IPT -t mangle -A PREROUTING -s 172.16.0.0/12 -j DROP
 $IPT -t mangle -A PREROUTING -s 192.0.2.0/24 -j DROP
 $IPT -t mangle -A PREROUTING -s 224.0.0.0/3 -j DROP
 $IPT -t mangle -A PREROUTING -s 240.0.0.0/5 -j DROP
+{%- if lxc_host is defined or lxc_host is sameas true %}
+# === Docker packets ===
+$IPT -t nat -A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+$IPT -t nat -A OUTPUT ! -d 127.0.0.0/8 -m addrtype --dst-type LOCAL -j DOCKER
+$IPT -t nat -A POSTROUTING -s 172.17.0.0/16 ! -o docker0 -j MASQUERADE
+$IPT -t nat -A POSTROUTING -s 172.18.0.0/16 ! -o br+ -j MASQUERADE
+$IPT -t nat -A DOCKER -i docker0 -j RETURN
+$IPT -A FORWARD -j DOCKER-USER
+$IPT -A FORWARD -j DOCKER-ISOLATION-STAGE-1
+$IPT -A FORWARD -o docker0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+$IPT -A FORWARD -o docker0 -j DOCKER
+$IPT -A FORWARD -i docker0 ! -o docker0 -j ACCEPT
+$IPT -A FORWARD -i docker0 -o docker0 -j ACCEPT
+$IPT -A FORWARD -o br+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+$IPT -A FORWARD -o br+ -j DOCKER
+$IPT -A FORWARD -i br+ ! -o br+ -j ACCEPT
+$IPT -A FORWARD -i br+ -o br+ -j ACCEPT
+$IPT -A DOCKER-ISOLATION-STAGE-1 -i docker0 ! -o docker0 -j DOCKER-ISOLATION-STAGE-2
+$IPT -A DOCKER-ISOLATION-STAGE-1 -j RETURN
+$IPT -A DOCKER-ISOLATION-STAGE-2 -o docker0 -j DROP
+$IPT -A DOCKER-ISOLATION-STAGE-2 -j RETURN
+$IPT -A DOCKER-USER -j RETURN
+{% endif -%}
 # === STOP SCAN ===
 $IPT -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN -m limit --limit 1/m --limit-burst 1  -j LOG --log-prefix "FIN-SCAN: " --log-level info
 $IPT -t mangle -A PREROUTING -p tcp --tcp-flags ALL FIN -j DROP
