@@ -74,7 +74,9 @@ table ip nat {
                 oifname != "docker0" ip saddr 172.17.0.0/16 counter masquerade
                 oifname != "br*" ip saddr 172.18.0.0/16 counter masquerade
                 {% endif -%}
+{%- raw %}
         }
+{% endraw -%}
 }
 # Create a table FILTER (The filter table is the default and most commonly used table that rules.)
 table inet filter {
