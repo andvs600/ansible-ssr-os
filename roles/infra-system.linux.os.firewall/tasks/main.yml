@@ -1,6 +1,9 @@
 ---
 - name: Check services exists
   block:
+    - name: Check service facts
+      service_facts:
+
     - name: Check if Docker service exists
       stat: path="/usr/lib/systemd/system/docker.service"
       register: docker_service
@@ -26,29 +29,41 @@
       register: nftables_service
       ignore_errors: yes
 
+    - debug:
+        var: ansible_facts.services['docker.service']
+
+    - name: Firewalld status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
+
+    - name: IPtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
+
+    - name: NFtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
+
 - name: Skip play on host if worked firewalld by default
   block:
-  - name: Check service facts
-    service_facts:
+    - name: Firewalld status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
 
-  - name: Firewalld status
-    debug:
-      msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
+    - name: IPtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
 
-  - name: IPtables status
-    debug:
-      msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
+    - name: NFtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
 
-  - name: NFtables status
-    debug:
-      msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
-
-  - name:
-    assert:
-      that:
-        - "'{{ ansible_facts.services['firewalld.service'].state }}' == 'running'"
-      fail_msg: "Firewalld is not running"
-      success_msg: "Firewalld is running"
+    - name:
+      assert:
+        that:
+          - "'{{ ansible_facts.services['firewalld.service'].state }}' == 'running'"
+        fail_msg: "Firewalld is not running"
+        success_msg: "Firewalld is running"
   always:
     - meta: end_host
   when: ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
