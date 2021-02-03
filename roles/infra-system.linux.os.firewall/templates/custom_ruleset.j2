@@ -84,7 +84,7 @@ table inet filter {
                 {% else -%}
                 elements = { }
                 {% endif -%}
-{% raw %}
+{%- raw %}
         }
 {% endraw %}
 
@@ -119,9 +119,10 @@ table inet filter {
                 {{ rules }}
                 {%   endfor -%}
                 {% endif -%}
-{% raw %}
+{%- raw %}
         }
 {% endraw %}
+
         chain DOCKER-ISOLATION-STAGE-1 {
                 iifname "docker0" oifname != "docker0" counter jump DOCKER-ISOLATION-STAGE-2
                 counter return
