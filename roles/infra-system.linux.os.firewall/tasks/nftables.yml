@@ -39,7 +39,6 @@
     owner: root
     group: root
     mode: '0755'
-  notify:
-    - Restart_NFT
+  notify: Restart_NFT
   tags:
     - nftables
