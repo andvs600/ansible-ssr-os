@@ -6,6 +6,11 @@
       register: docker_service
       ignore_errors: yes
 
+    - debug:
+        msg: "Possibly the node uses Docker. The node must be configured manually!"
+      register: result
+      when: (docker_service.stat.exists == true)
+
     - name: Check if iptables service exists
       stat: path="/usr/lib/systemd/system/iptables.service"
       register: iptables_service
@@ -16,21 +21,33 @@
       register: nftables_service
       ignore_errors: yes
 
-- name: Skip play if Docker installed
+- name: Skip play on host if worked firewalld by default
   block:
-    - debug:
-        msg: "Possibly the node uses Docker. The node must be configured manually!"
-      register: result
-  when:
-    - (docker_service.stat.exists == true)
+  - name: Check service facts
+    service_facts:
 
+  - name: Firewalld status
+    debug:
+      msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
 
-- name: Stop and mask firewalld service
-  systemd:
-    name: firewalld
-    state: stopped
-    enabled: no
-    masked: yes
+  - name: IPtables status
+    debug:
+      msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
+
+  - name: NFtables status
+    debug:
+      msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
+
+  - name:
+    assert:
+      that:
+        - "'{{ ansible_facts.services['firewalld.service'].state }}' == 'running'"
+      fail_msg: "Firewalld is not running"
+      success_msg: "Firewalld is running"
+  always:
+    - meta: end_host
+  when: ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
+
 
 - name: Include task config iptables
   include: iptables.yml

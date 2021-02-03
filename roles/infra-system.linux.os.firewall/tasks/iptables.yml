@@ -10,12 +10,21 @@
   tags:
     - iptables
 
-- name: Enable service iptables and ensure it is not masked
-  systemd:
-    name: iptables
-    state: started
-    enabled: yes
-    masked: no
+- name: Disable firewalld and enable IPtables
+  block:
+    - name: Stop and mask firewalld service
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+        masked: yes
+
+    - name: Enable service iptables and ensure it is not masked
+      systemd:
+        name: iptables
+        state: started
+        enabled: yes
+        masked: no
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
   tags:
     - iptables

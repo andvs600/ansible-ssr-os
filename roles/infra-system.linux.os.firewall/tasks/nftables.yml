@@ -7,12 +7,21 @@
   tags:
     - nftables
 
-- name: Enable service nftables and ensure it is not masked
-  systemd:
-    name: nftables
-    state: started
-    enabled: yes
-    masked: no
+- name: Disable firewalld and enable NFtables
+  block:
+    - name: Stop and mask firewalld service
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+        masked: yes
+
+    - name: Enable service nftables and ensure it is not masked
+      systemd:
+        name: nftables
+        state: started
+        enabled: yes
+        masked: no
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
   tags:
     - nftables 
