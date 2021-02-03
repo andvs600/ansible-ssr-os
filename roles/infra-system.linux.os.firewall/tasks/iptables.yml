@@ -7,8 +7,6 @@
     - iptables
     - iptables-services
   when: ansible_facts.services['iptables.service'] is undefined
-  tags:
-    - iptables
 
 - name: Disable firewalld and enable IPtables
   block:
@@ -27,16 +25,15 @@
         masked: no
       register: result_activate_iptables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
-  tags:
-    - iptables
+
+- name: Disable prevent Docker from manipulating iptables
+  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Change the xt_recent module 
   modprobe:
     name: xt_recent
     state: present
     params: 'ip_pkt_list_tot=75'
-  tags:
-    - iptables
 
 - name: Copy the xt_recent module config
   copy:
@@ -45,8 +42,6 @@
     owner: root
     group: root
     mode: 0644
-  tags:
-    - iptables
 
 - name: Copy the base rules file
   template:
@@ -55,8 +50,6 @@
     owner: root
     group: root
     mode: '0750'
-  tags:
-    - iptables
 
 - name: Copy the custom rules template file
   template:
@@ -66,15 +59,9 @@
     group: root
     mode: '0644'
   register: result_change_rules
-  tags:
-    - iptables
 
 - debug:
     var: result_activate_iptables.state == 'started'
-
-- debug:
-    var: result_change_rules
-  when: result_change_rules is changed
 
 #- name: Reload rules
 #  notify: Restart_IPT

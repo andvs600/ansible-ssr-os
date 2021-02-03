@@ -4,8 +4,6 @@
     name: nftables
     state: latest
   when: ansible_facts.services['nftables.service'] is undefined
-  tags:
-    - nftables
 
 - name: Disable firewalld and enable NFtables
   block:
@@ -24,15 +22,14 @@
         masked: no
       register: result_activate_nftables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
-  tags:
-    - nftables 
+
+- name: Disable prevent Docker from manipulating iptables
+  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Enable the custom rules
   lineinfile:
     path: /etc/sysconfig/nftables.conf
     line: 'include "/etc/nftables/custome-ruleset.nft"'
-  tags:
-    - nftables
 
 - name: Copy the custom rules template file
   template:
@@ -42,16 +39,10 @@
     group: root
     mode: '0755'
   register: result_change_rules
-  tags:
-    - nftables
 
 - debug:
     var: result_activate_nftables
   when: result_activate_nftables.state == 'started'
-
-- debug:
-    var: result_change_rules
-  when: result_change_rules is changed
 
 #- name: Reload rules
 #  notify: Restart_NFT
