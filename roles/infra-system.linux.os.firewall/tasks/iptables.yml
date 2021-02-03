@@ -26,6 +26,7 @@
         enabled: yes
         masked: no
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
+  register: result_activate_iptables
   tags:
     - iptables
 
@@ -64,8 +65,16 @@
     owner: root
     group: root
     mode: '0644'
-  notify: Restart_IPT
+  register: result_change_rules
   tags:
     - iptables
 
+- gebug:
+    var: result_activate_iptables
+
+- gebug:
+    var: result_change_rules
+
+#- name: Reload rules
+#  notify: Restart_IPT
 ...

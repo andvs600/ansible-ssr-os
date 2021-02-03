@@ -13,9 +13,6 @@
         lxc_host: true
       when: lxc_host is undefined and (ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled')
 
-    - debug:
-        var: ansible_facts.services['docker.service']
-
 - name: Skip play on host if worked firewalld by default
   block:
     - name: Firewalld status

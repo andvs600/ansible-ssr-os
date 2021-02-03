@@ -23,6 +23,7 @@
         enabled: yes
         masked: no
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
+  register: result_activate_nftables
   tags:
     - nftables 
 
@@ -40,7 +41,16 @@
     owner: root
     group: root
     mode: '0755'
-  notify: Restart_NFT
+  register: result_change_rules
   tags:
     - nftables
+
+- gebug:
+    var: result_activate_nftables
+
+- gebug:
+    var: result_change_rules
+
+#- name: Reload rules
+#  notify: Restart_NFT
 ...
