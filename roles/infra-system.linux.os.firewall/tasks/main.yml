@@ -11,6 +11,7 @@
     - name: LXC host
       set_fact:
         lxc_host: true
+        cacheable: no
       when: lxc_host is undefined and (ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled')
   tags:
     - iptables
