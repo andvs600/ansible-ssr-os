@@ -47,9 +47,10 @@
 
 - debug:
     var: result_activate_nftables
+  when: result_activate_nftables.state == 'started'
 
 - debug:
-    var: result_change_rules
+    var: result_change_rules is changed
 
 #- name: Reload rules
 #  notify: Restart_NFT

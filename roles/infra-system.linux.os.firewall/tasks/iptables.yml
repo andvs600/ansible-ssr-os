@@ -70,10 +70,10 @@
     - iptables
 
 - debug:
-    var: result_activate_iptables
+    var: result_activate_iptables.state == 'started'
 
 - debug:
-    var: result_change_rules
+    var: result_change_rules is changed
 
 #- name: Reload rules
 #  notify: Restart_IPT
