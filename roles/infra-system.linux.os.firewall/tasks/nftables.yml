@@ -17,6 +17,9 @@
   tags:
     - nftables 
 
+
+- debug:
+    var: lxc_host
 #- name: Check status NFT
 #  shell: systemctl is-active nftables.service
 #  register: nft_services_status
