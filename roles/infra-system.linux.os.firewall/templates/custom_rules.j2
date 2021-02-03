@@ -1,8 +1,8 @@
 #{{ ansible_managed }}
 # === DNS SERVER ===
-$IPT -A PREROUTING -t raw {%- if lxc_host is defined or lxc_host is sameas true %}! -i br+ {% endif %}-j NOTRACK -m udp -p udp --dport 53
-$IPT -A PREROUTING -t raw {%- if lxc_host is defined or lxc_host is sameas true %}! -i br+ {% endif %}-j NOTRACK -m tcp -p tcp --dport 53
-{%- if lxc_host is defined or lxc_host is sameas true %}
+$IPT -A PREROUTING -t raw {%- if lxc_host is defined and lxc_host is sameas true %}! -i br+ {% endif %}-j NOTRACK -m udp -p udp --dport 53
+$IPT -A PREROUTING -t raw {%- if lxc_host is defined and lxc_host is sameas true %}! -i br+ {% endif %}-j NOTRACK -m tcp -p tcp --dport 53
+{%- if lxc_host is defined and lxc_host is sameas true %}
 $IPT -A PREROUTING -t raw ! -i br+ -j NOTRACK -m udp -p udp --dport 53
 $IPT -A PREROUTING -t raw ! -i br+ -j NOTRACK -m tcp -p tcp --dport 53
 {% endif %}

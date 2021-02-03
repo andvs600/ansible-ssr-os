@@ -47,7 +47,7 @@
     mode: '0750'
   tags:
     - iptables
-    
+
 - name: Copy the custom rules template file
   template:
     src: custom_rules.j2
@@ -59,7 +59,3 @@
   tags:
     - iptables
 
-#- name: Check status IPTables
-#  shell: systemctl is-active iptables.service
-#  register: ipt_services_status
-#  ignore_errors: yes

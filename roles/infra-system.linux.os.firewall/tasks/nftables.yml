@@ -17,21 +17,13 @@
   tags:
     - nftables 
 
-
-- debug:
-    var: lxc_host
-#- name: Check status NFT
-#  shell: systemctl is-active nftables.service
-#  register: nft_services_status
-#  ignore_errors: yes
-
 - name: Enable the custom rules
   lineinfile:
     path: /etc/sysconfig/nftables.conf
     line: 'include "/etc/nftables/custome-ruleset.nft"'
   tags:
     - nftables
-    
+
 - name: Copy the custom rules template file
   template:
     src: custom_ruleset.j2

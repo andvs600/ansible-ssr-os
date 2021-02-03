@@ -22,7 +22,8 @@
         msg: "Possibly the node uses Docker. The node must be configured manually!"
       register: result
   when:
-    - (docker_service.stat.exists == true) or ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
+    - (docker_service.stat.exists == true)
+
 
 - name: Stop and mask firewalld service
   systemd:
