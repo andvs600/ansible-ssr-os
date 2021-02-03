@@ -157,7 +157,8 @@ table inet filter {
                 iifname "br*" oifname != "br*" counter accept
                 iifname "br*" oifname "br*" counter accept
         }
-{% endif -%}
+{% endif %}
+
         chain output {
                 type filter hook output priority 0; policy accept;
         }
