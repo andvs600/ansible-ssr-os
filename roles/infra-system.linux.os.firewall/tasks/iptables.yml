@@ -26,8 +26,8 @@
       register: result_activate_iptables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
 
-- name: Disable prevent Docker from manipulating iptables
-  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
+#- name: Disable prevent Docker from manipulating iptables
+#  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Change the xt_recent module 
   modprobe:
