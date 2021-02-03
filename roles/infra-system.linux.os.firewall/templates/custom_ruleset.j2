@@ -33,10 +33,10 @@ table ip mangle {
         chain prerouting {
                 type filter hook prerouting priority -150; policy accept;
                 iifname != "lo" ip saddr 127.0.0.0/8 counter drop comment "These rules assume that your loopback interface"
-                {% if lxc_host is defined or lxc_host is sameas true %}
+                {% if lxc_host is defined or lxc_host is sameas true -%}
                 ip saddr 172.17.0.0/16 counter return
                 ip saddr 172.18.0.0/16 counter return
-                {% endif %}
+                {% endif -%}
                 ip saddr { 0.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.2.0/24,224.0.0.0/3,240.0.0.0/5} counter drop comment "Block Packets From Private Subnets (Spoofing)"
                 ip frag-off & 0x1fff != 0 counter drop
                 tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
@@ -127,7 +127,7 @@ table inet filter {
         }
 {% endraw %}
 
-{%- if lxc_host is defined or lxc_host is sameas true %}
+{% if lxc_host is defined or lxc_host is sameas true %}
         chain DOCKER-ISOLATION-STAGE-1 {
                 iifname "docker0" oifname != "docker0" counter jump DOCKER-ISOLATION-STAGE-2
                 counter return
