@@ -56,7 +56,7 @@
     group: root
     mode: '0644'
   notify:
-    - Restart IPT
+    - Restart_IPT
   tags:
     - iptables
 
