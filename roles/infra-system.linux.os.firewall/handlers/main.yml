@@ -3,10 +3,10 @@
   shell: /usr/sbin/iptcfg init
   args:
     executable: /bin/bash
-  when: (ipt_services_status.stdout == "active" ) or ((activate_firewall | bool == true) and (activate_firewall is defined))
+  when: ((activate_firewall | bool == true) and (activate_firewall is defined))
 
 - name: Restart NFT
   systemd:
     name: nftables
     state: restarted
-  when: (nft_services_status.stdout == "active" ) or ((activate_firewall | bool == true) and (activate_firewall is defined))
+  when: ((activate_firewall | bool == true) and (activate_firewall is defined))
