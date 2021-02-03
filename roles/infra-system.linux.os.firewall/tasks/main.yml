@@ -30,12 +30,11 @@
     state: stopped
     enabled: no
     masked: yes
-  when: result is skipped
 
 - name: Include task config iptables
   include: iptables.yml
-  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7')
+  when: (ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7')
 
 - name: Include task config nftables
   include: nftables.yml
-  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8')
+  when: (ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8')
