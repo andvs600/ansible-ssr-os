@@ -60,7 +60,7 @@
   tags:
     - iptables
 
-- name: Check status IPTables
-  shell: systemctl is-active iptables.service
-  register: ipt_services_status
-  ignore_errors: yes
+#- name: Check status IPTables
+#  shell: systemctl is-active iptables.service
+#  register: ipt_services_status
+#  ignore_errors: yes

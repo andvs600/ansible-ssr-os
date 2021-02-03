@@ -17,10 +17,10 @@
   tags:
     - nftables 
 
-- name: Check status NFT
-  shell: systemctl is-active nftables.service
-  register: nft_services_status
-  ignore_errors: yes
+#- name: Check status NFT
+#  shell: systemctl is-active nftables.service
+#  register: nft_services_status
+#  ignore_errors: yes
 
 - name: Enable the custom rules
   lineinfile:
