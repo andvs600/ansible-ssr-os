@@ -22,8 +22,8 @@
         state: started
         enabled: yes
         masked: no
+      register: result_activate_nftables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
-  register: result_activate_nftables
   tags:
     - nftables 
 
