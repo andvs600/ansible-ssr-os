@@ -80,7 +80,9 @@ $IPT -A OUTPUT -d 127.0.0.1 -j ACCEPT
 $IPT -t mangle -A PREROUTING -s 127.0.0.0/8 ! -i lo -j DROP
 $IPT -t mangle -A PREROUTING -s 0.0.0.0/8 -j DROP
 $IPT -t mangle -A PREROUTING -s 169.254.0.0/16 -j DROP
-# ! 172.17.0.0/16, ! 172.18.0.0/16
+{%- if lxc_host is defined or lxc_host is sameas true %}
+$IPT -t mangle -A PREROUTING ! -s 172.17.0.0/16,172.18.0.0/16 -j RETURN
+{% endif -%}
 $IPT -t mangle -A PREROUTING -s 172.16.0.0/12 -j DROP
 $IPT -t mangle -A PREROUTING -s 192.0.2.0/24 -j DROP
 $IPT -t mangle -A PREROUTING -s 224.0.0.0/3 -j DROP
@@ -140,7 +142,7 @@ $IPT -A INPUT -p tcp -m state --state NEW --dport 22 -j LOG --log-prefix "SSH-WA
 # === SSH ALLOW ===
 $IPT -A INPUT -p tcp -m state --state NEW --dport 22 {% if nf_int is undefined or nf_int is sameas true %}-s 10.0.0.0/8 {% endif %}-m recent --name ssh --set -j ACCEPT
 # === Limit connections per source IP ===
-$IPT -A INPUT -p tcp -m connlimit --connlimit-above 111 -j REJECT --reject-with tcp-reset
+$IPT -A INPUT -p tcp --syn -m connlimit --connlimit-above {{ sper_limit_conn }} -j REJECT --reject-with tcp-reset
 # === Limit RST packets ===
 $IPT -A INPUT -p tcp --tcp-flags RST RST -m limit --limit 2/s --limit-burst 2 -j ACCEPT
 $IPT -A INPUT -p tcp --tcp-flags RST RST -j DROP

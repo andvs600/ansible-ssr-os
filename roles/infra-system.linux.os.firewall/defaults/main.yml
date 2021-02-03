@@ -6,3 +6,5 @@ nf_int: true
 nf_ports: {}
 # For rules
 nf_custom_ruleset: {}
+# Limit connections per source IP
+sper_limit_conn: '1024'
