@@ -64,8 +64,10 @@ table ip nat {
 
         chain postrouting {
                 type nat hook postrouting priority -100; policy accept;
+                {% if lxc_host is defined or lxc_host is sameas true %}
                 oifname != "docker0" ip saddr 172.17.0.0/16 counter masquerade
                 oifname != "br*" ip saddr 172.18.0.0/16 counter masquerade
+                {% endif %}
         }
 }
 # Create a table FILTER (The filter table is the default and most commonly used table that rules.)
@@ -123,6 +125,7 @@ table inet filter {
         }
 {% endraw %}
 
+{%- if lxc_host is defined or lxc_host is sameas true %}
         chain DOCKER-ISOLATION-STAGE-1 {
                 iifname "docker0" oifname != "docker0" counter jump DOCKER-ISOLATION-STAGE-2
                 counter return
@@ -156,4 +159,5 @@ table inet filter {
         chain output {
                 type filter hook output priority 0; policy accept;
         }
+{% endif -%}
 }
