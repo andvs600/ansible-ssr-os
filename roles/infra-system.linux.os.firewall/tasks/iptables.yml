@@ -60,8 +60,8 @@
     mode: '0644'
   register: result_change_rules
 
-- debug:
-    var: result_activate_iptables.state == 'started'
+#- debug:
+#    var: result_activate_iptables.state == 'started'
 
 #- name: Reload rules
 #  notify: Restart_IPT

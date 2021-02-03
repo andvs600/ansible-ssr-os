@@ -40,9 +40,9 @@
     mode: '0755'
   register: result_change_rules
 
-- debug:
-    var: result_activate_nftables
-  when: result_activate_nftables.state == 'started'
+#- debug:
+#    var: result_activate_nftables
+#  when: result_activate_nftables.state == 'started'
 
 #- name: Reload rules
 #  notify: Restart_NFT
