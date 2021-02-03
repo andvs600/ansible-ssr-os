@@ -73,7 +73,8 @@
     var: result_activate_iptables.state == 'started'
 
 - debug:
-    var: result_change_rules is changed
+    var: result_change_rules
+  when: result_change_rules is changed
 
 #- name: Reload rules
 #  notify: Restart_IPT
