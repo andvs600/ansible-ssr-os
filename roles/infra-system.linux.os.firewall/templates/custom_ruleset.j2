@@ -40,7 +40,7 @@ table ip mangle {
                 ip saddr { 0.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.2.0/24,224.0.0.0/3,240.0.0.0/5} counter drop comment "Block Packets From Private Subnets (Spoofing)"
                 ip frag-off & 0x1fff != 0 counter drop
                 tcp flags & (fin|syn|rst|ack) != syn ct state new counter drop
-                
+
                 tcp flags & (fin|syn|rst|psh|ack|urg) == fin limit rate 1/minute burst 1 packets counter log prefix "FIN-SCAN: " level warn drop
                 tcp flags & (fin|syn|rst|psh|ack|urg) == (fin|syn) limit rate 1/minute burst 1 packets counter log prefix "SYNFIN-SCAN: " level warn drop
                 tcp flags & (fin|syn|rst|psh|ack|urg) == (fin|psh|urg) limit rate 1/minute burst 1 packets counter log prefix "NMAP-XMAS-SCAN: " level warn drop
@@ -96,7 +96,7 @@ table inet filter {
                 type filter hook prerouting priority 0; policy accept;
                 ip saddr @blackhole drop
         }
-        
+
         chain input {
                 type filter hook input priority 0; policy drop;
                 iifname != "lo" ip saddr 127.0.0.1 counter drop
