@@ -45,10 +45,10 @@
   tags:
     - nftables
 
-- gebug:
+- debug:
     var: result_activate_nftables
 
-- gebug:
+- debug:
     var: result_change_rules
 
 #- name: Reload rules

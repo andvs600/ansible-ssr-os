@@ -69,10 +69,10 @@
   tags:
     - iptables
 
-- gebug:
+- debug:
     var: result_activate_iptables
 
-- gebug:
+- debug:
     var: result_change_rules
 
 #- name: Reload rules
