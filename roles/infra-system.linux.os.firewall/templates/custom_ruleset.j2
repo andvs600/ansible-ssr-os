@@ -56,18 +56,16 @@ table ip mangle {
 table ip nat {
         chain prerouting {
                 type nat hook prerouting priority -100; policy accept;
-                {% if lxc_host is defined or lxc_host is sameas true %}
-                fib daddr type local counter jump DOCKER
-                {% endif %}
         }
+
         chain output {
                 type filter hook output priority 0; policy accept;
-                ip daddr != 127.0.0.0/8 fib daddr type local counter jump DOCKER
         }
+
         chain postrouting {
                 type nat hook postrouting priority -100; policy accept;
                 oifname != "docker0" ip saddr 172.17.0.0/16 counter masquerade
-                oifname != "br*" ip saddr 172.18.0.0/16 counter jump masquerade
+                oifname != "br*" ip saddr 172.18.0.0/16 counter masquerade
         }
 }
 # Create a table FILTER (The filter table is the default and most commonly used table that rules.)
@@ -77,6 +75,7 @@ table inet filter {
                 flags timeout
                 timeout 1d
         }
+
         set custom_accept {
                 type inet_service
                 flags interval
@@ -146,11 +145,9 @@ table inet filter {
                 counter jump DOCKER-USER
                 counter jump DOCKER-ISOLATION-STAGE-1
                 oifname "docker0" ct state related,established counter accept
-                oifname "docker0" counter jump DOCKER
                 iifname "docker0" oifname != "docker0" counter accept
                 iifname "docker0" oifname "docker0" counter accept
                 oifname "br*" ct state related,established counter accept
-                oifname "br*" counter jump DOCKER
                 iifname "br*" oifname != "br*" counter accept
                 iifname "br*" oifname "br*" counter accept
         }
