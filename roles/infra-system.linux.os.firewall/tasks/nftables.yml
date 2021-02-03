@@ -3,7 +3,7 @@
   yum:
     name: nftables
     state: latest
-  when: not nftables_service.stat.exists 
+  when: ansible_facts.services['nftables.service'] is undefined
   tags:
     - nftables
 

@@ -16,6 +16,8 @@
     - debug:
         var: ansible_facts.services['docker.service']
 
+- name: Skip play on host if worked firewalld by default
+  block:
     - name: Firewalld status
       debug:
         msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
@@ -30,20 +32,6 @@
       debug:
         msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
       when: ansible_facts.services['nftables.service'] is defined
-
-- name: Skip play on host if worked firewalld by default
-  block:
-    - name: Firewalld status
-      debug:
-        msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
-
-    - name: IPtables status
-      debug:
-        msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
-
-    - name: NFtables status
-      debug:
-        msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
 
     - name:
       assert:

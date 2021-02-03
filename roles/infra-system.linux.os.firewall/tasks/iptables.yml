@@ -6,7 +6,7 @@
   loop:
     - iptables
     - iptables-services
-  when: not iptables_service.stat.exists
+  when: ansible_facts.services['iptables.service'] is undefined
   tags:
     - iptables
 
