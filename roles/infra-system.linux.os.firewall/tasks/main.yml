@@ -4,30 +4,14 @@
     - name: Check service facts
       service_facts:
 
-    - name: Check if Docker service exists
-      stat: path="/usr/lib/systemd/system/docker.service"
-      register: docker_service
-      ignore_errors: yes
-
     - debug:
         msg: "Possibly the node uses Docker. The node must be configured manually!"
-      register: result
-      when: (docker_service.stat.exists == true)
+      when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'disabled'
 
     - name: LXC host
       set_fact:
         lxc_host: true
-      when: lxc_host is undefined and result is succeeded
-
-    - name: Check if iptables service exists
-      stat: path="/usr/lib/systemd/system/iptables.service"
-      register: iptables_service
-      ignore_errors: yes
-    
-    - name: Check if nftables service exists
-      stat: path="/usr/lib/systemd/system/nftables.service"
-      register: nftables_service
-      ignore_errors: yes
+      when: lxc_host is undefined and (ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled')
 
     - debug:
         var: ansible_facts.services['docker.service']
@@ -35,14 +19,17 @@
     - name: Firewalld status
       debug:
         msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
+      when: ansible_facts.services['firewalld.service'] is defined
 
     - name: IPtables status
       debug:
         msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
+      when: ansible_facts.services['iptables.service'] is defined
 
     - name: NFtables status
       debug:
         msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
+      when: ansible_facts.services['nftables.service'] is defined
 
 - name: Skip play on host if worked firewalld by default
   block:
