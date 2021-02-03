@@ -27,7 +27,7 @@ $IPT -A INPUT -p tcp -m multiport --dports 443,1556,2821,10082,10102,13720,13724
 $IPT -A INPUT -p tcp -m multiport --dport 9090 -j ACCEPT
 # === CUSTOM ===
 {% if nf_ports %}
-$IPT -A INPUT -p tcp -m multiport --dport {{ nf_ports | join(', ') }} -j ACCEPT
+$IPT -A INPUT -p tcp -m multiport --dport {{ nf_ports | join(',') }} -j ACCEPT
 {% endif %}
 {% if nf_custom_ruleset is defined %}
 {%   for rules in nf_custom_ruleset %}
