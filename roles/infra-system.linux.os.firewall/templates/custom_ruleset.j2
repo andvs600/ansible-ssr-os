@@ -26,6 +26,7 @@ table ip raw {
                 type filter hook prerouting priority -300; policy accept;
                 {% if lxc_host is defined or lxc_host is sameas true %}iifname != "br*" {% endif %}udp dport { domain, bootps, tftp, ntp, nfs} notrack
                 {% if lxc_host is defined or lxc_host is sameas true %}iifname != "br*" {% endif %}tcp dport { domain, bootps, tftp, ntp, nfs} notrack
+
         }
 }
 # Create a table MANGLE (The mangle table is used to modify or mark packets and their header information.)
@@ -52,16 +53,19 @@ table ip mangle {
                 ip protocol icmp limit rate 1/second burst 1 packets counter accept
                 ip protocol icmp limit rate 1/second burst 100 packets counter log prefix "ICMP FLOOD: " level warn drop
                 ct state new tcp option maxseg size != 536-65535 counter drop comment "Block Uncommon MSS Values. SACK Panic: CVE-2019-11477, CVE-2019-11478, CVE-2019-11479"
+
         }
 }
 # Create a table NAT (This table is used for Network Address Translation (NAT). If a packet creates a new connection, the nat table gets checked for rules.)
 table ip nat {
         chain prerouting {
                 type nat hook prerouting priority -100; policy accept;
+
         }
 
         chain output {
                 type filter hook output priority 0; policy accept;
+
         }
 
         chain postrouting {
@@ -78,6 +82,7 @@ table inet filter {
                 type ipv4_addr
                 flags timeout
                 timeout 1d
+
         }
 
         set custom_accept {
@@ -95,6 +100,7 @@ table inet filter {
         chain prerouting {
                 type filter hook prerouting priority 0; policy accept;
                 ip saddr @blackhole drop
+
         }
 
         chain input {
@@ -131,15 +137,18 @@ table inet filter {
         chain DOCKER-ISOLATION-STAGE-1 {
                 iifname "docker0" oifname != "docker0" counter jump DOCKER-ISOLATION-STAGE-2
                 counter return
+
         }
 
         chain DOCKER-ISOLATION-STAGE-2 {
                 oifname "docker0" counter drop
                 counter return
+
         }
 
         chain DOCKER-USER {
                 counter return
+
         }
 
         chain forward {
@@ -156,10 +165,12 @@ table inet filter {
                 oifname "br*" ct state related,established counter accept
                 iifname "br*" oifname != "br*" counter accept
                 iifname "br*" oifname "br*" counter accept
+
         }
 {% endif %}
 
         chain output {
                 type filter hook output priority 0; policy accept;
+                
         }
 }
