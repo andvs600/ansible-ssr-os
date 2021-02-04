@@ -19,6 +19,10 @@
       stage: clone
       script:
         - git -C /home/gitlab-runner/ clone $CI_REPOSITORY_URL
+<<<<<<< HEAD
+=======
+        - git -C /home/gitlab-runner/$CI_PROJECT_NAME clone http://gitlab-lb-01.gvc.oao.rzd/PinkFury/material.git
+>>>>>>> a0c2deb3f08426a636cf0137f28102d57624530b
     build_config:
       tags:
         - mkdocs

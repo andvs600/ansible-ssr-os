@@ -3,32 +3,49 @@
   yum:
     name: nftables
     state: latest
-  when: not nftables_service.stat.exists 
-  tags:
-    - nftables
+  when: ansible_facts.services['nftables.service'] is undefined
 
-- name: Enable service nftables and ensure it is not masked
-  systemd:
-    name: nftables
-    state: started
-    enabled: yes
-    masked: no
+- name: Disable firewalld and enable NFtables
+  block:
+    - name: Stop and mask firewalld service
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+        masked: yes
+
+    - name: Enable service nftables and ensure it is not masked
+      systemd:
+        name: nftables
+        state: started
+        enabled: yes
+        masked: no
+      register: result_activate_nftables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
-  tags:
-    - nftables 
 
-- name: Check status NFT
-  shell: systemctl is-active nftables.service
-  register: nft_services_status
-  ignore_errors: yes
+- name: Disable prevent Docker from manipulating iptables
+  block:
+    - name: Copy the Docker engine’s configuration file
+      copy:
+        src: files/daemon.json
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: 0600
+      register: copy_config
+
+    - name: Restart Docker service
+      systemd:
+        name: docker
+        state: restarted
+      when: copy_config is changed and ((restart_docker_srv | bool == true) and (restart_docker_srv is defined))
+  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Enable the custom rules
   lineinfile:
     path: /etc/sysconfig/nftables.conf
     line: 'include "/etc/nftables/custome-ruleset.nft"'
-  tags:
-    - nftables
-    
+
 - name: Copy the custom rules template file
   template:
     src: custom_ruleset.j2
@@ -36,7 +53,5 @@
     owner: root
     group: root
     mode: '0755'
-  notify:
-    - Restart NFT
-  tags:
-    - nftables
+  notify: Restart_NFT
+...

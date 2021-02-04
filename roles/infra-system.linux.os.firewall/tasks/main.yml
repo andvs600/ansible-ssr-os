@@ -1,41 +1,59 @@
 ---
 - name: Check services exists
   block:
-    - name: Check if Docker service exists
-      stat: path="/usr/lib/systemd/system/docker.service"
-      register: docker_service
-      ignore_errors: yes
+    - name: Check service facts
+      service_facts:
 
-    - name: Check if iptables service exists
-      stat: path="/usr/lib/systemd/system/iptables.service"
-      register: iptables_service
-      ignore_errors: yes
-    
-    - name: Check if nftables service exists
-      stat: path="/usr/lib/systemd/system/nftables.service"
-      register: nftables_service
-      ignore_errors: yes
-
-- name: Skip play if Docker installed
-  block:
     - debug:
         msg: "Possibly the node uses Docker. The node must be configured manually!"
-      register: result
-  when:
-    - (docker_service.stat.exists == true) or ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
+      when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'disabled'
 
-- name: Stop and mask firewalld service
-  systemd:
-    name: firewalld
-    state: stopped
-    enabled: no
-    masked: yes
-  when: result is skipped
+    - name: LXC host
+      set_fact:
+        lxc_host: true
+        cacheable: no
+      when: lxc_host is undefined and (ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled')
+  tags:
+    - iptables
+    - nftables
+
+- name: Skip play on host if worked firewalld by default
+  block:
+    - name: Firewalld status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['firewalld.service'].status }}"
+      when: ansible_facts.services['firewalld.service'] is defined
+
+    - name: IPtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['iptables.service'].status }}"
+      when: ansible_facts.services['iptables.service'] is defined
+
+    - name: NFtables status
+      debug:
+        msg: "STATUS: {{ ansible_facts.services['nftables.service'].status }}"
+      when: ansible_facts.services['nftables.service'] is defined
+
+    - name:
+      assert:
+        that:
+          - "'{{ ansible_facts.services['firewalld.service'].state }}' == 'running'"
+        fail_msg: "Firewalld is not running"
+        success_msg: "Firewalld is running"
+  always:
+    - meta: end_host
+  when: ((firewalld_not_disabled | bool == true) and (firewalld_not_disabled is defined))
+
 
 - name: Include task config iptables
   include: iptables.yml
-  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7')
+  when: (ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7')
+  tags:
+    - iptables
 
 - name: Include task config nftables
   include: nftables.yml
-  when: result is skipped and (ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8')
+  when: (ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '8')
+  tags:
+    - nftables
+...
