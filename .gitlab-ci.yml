@@ -32,5 +32,5 @@
       script:
         - cd /home/gitlab-runner/$CI_PROJECT_NAME/
         - sudo mv site/* /var/www/base/docs/"$DIR_NAME"
-        - chown -R gitlab-runner:gitlab-runner /home/gitlab-runner/$CI_PROJECT_NAME/
+        - sudo chown -R gitlab-runner:gitlab-runner /home/gitlab-runner/$CI_PROJECT_NAME/
         - rm -rf /home/gitlab-runner/$CI_PROJECT_NAME
