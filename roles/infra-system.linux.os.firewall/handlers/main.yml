@@ -3,8 +3,11 @@
   shell: /usr/sbin/iptcfg init
   args:
     executable: /bin/bash
+  when: result_activate_iptables.state == 'started'
 
 - name: Restart_NFT
   systemd:
     name: nftables
     state: restarted
+  when: result_activate_nftables.state == 'started'
+...

@@ -8,3 +8,5 @@ nf_ports: {}
 nf_custom_ruleset: {}
 # Limit connections per source IP
 sper_limit_conn: '1024'
+# The Docker need restart
+restart_docker_srv: false

@@ -26,8 +26,23 @@
       register: result_activate_iptables
   when: (activate_firewall | bool == true) and (activate_firewall is defined)
 
-#- name: Disable prevent Docker from manipulating iptables
-#  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
+- name: Disable prevent Docker from manipulating iptables
+  block:
+    - name: Copy the Docker engine’s configuration file
+      copy:
+        src: files/daemon.json
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: 0600
+      register: copy_config
+
+    - name: Restart Docker service
+      systemd:
+        name: docker
+        state: restarted
+      when: copy_config is succeeded and ((restart_docker_srv | bool == true) and (restart_docker_srv is defined))
+  when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Change the xt_recent module 
   modprobe:
@@ -59,10 +74,4 @@
     group: root
     mode: '0644'
   register: result_change_rules
-
-#- debug:
-#    var: result_activate_iptables.state == 'started'
-
-#- name: Reload rules
-#  notify: Restart_IPT
 ...
