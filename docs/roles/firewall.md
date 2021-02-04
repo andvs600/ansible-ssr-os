@@ -44,8 +44,8 @@
 
     [example-servers:vars]
     ansible_connection=ssh
-    activate_firewall=true
-    nf_int=true
+    activate_firewall=True
+    nf_int=True
     nf_ports=['80','443']
     ```
 
