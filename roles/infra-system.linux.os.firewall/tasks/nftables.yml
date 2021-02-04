@@ -53,5 +53,5 @@
     owner: root
     group: root
     mode: '0755'
-  register: result_change_rules
+  notify: Restart_NFT
 ...

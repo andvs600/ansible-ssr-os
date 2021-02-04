@@ -73,5 +73,5 @@
     owner: root
     group: root
     mode: '0644'
-  register: result_change_rules
+  notify: Restart_IPT
 ...
