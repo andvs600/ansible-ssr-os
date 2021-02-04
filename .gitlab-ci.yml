@@ -19,6 +19,7 @@
       stage: clone
       script:
         - git -C /home/gitlab-runner/ clone $CI_REPOSITORY_URL
+        - chown -R gitlab-runner:gitlab-runner /home/gitlab-runner/$CI_PROJECT_NAME/
     build_config:
       tags:
         - mkdocs
