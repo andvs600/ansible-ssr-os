@@ -38,7 +38,7 @@
       systemd:
         name: docker
         state: restarted
-      when: copy_config is succeeded and ((restart_docker_srv | bool == true) and (restart_docker_srv is defined))
+      when: copy_config is changed and ((restart_docker_srv | bool == true) and (restart_docker_srv is defined))
   when: ansible_facts.services['docker.service'] is defined and ansible_facts.services['docker.service'].status == 'enabled'
 
 - name: Enable the custom rules
