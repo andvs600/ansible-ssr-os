@@ -1,12 +1,13 @@
 ---
-- name: Restart IPT
+- name: Restart_IPT
   shell: /usr/sbin/iptcfg init
   args:
     executable: /bin/bash
-  when: (ipt_services_status.stdout == "active" ) or ((activate_firewall | bool == true) and (activate_firewall is defined))
+  when: result_activate_iptables.state == 'started'
 
-- name: Restart NFT
+- name: Restart_NFT
   systemd:
     name: nftables
     state: restarted
-  when: (nft_services_status.stdout == "active" ) or ((activate_firewall | bool == true) and (activate_firewall is defined))
+  when: result_activate_nftables.state == 'started'
+...
