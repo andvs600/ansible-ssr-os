@@ -33,3 +33,4 @@
         - cd /home/gitlab-runner/$CI_PROJECT_NAME/
         - sudo mv site/* /var/www/base/docs/"$DIR_NAME"
         - sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME
+        
