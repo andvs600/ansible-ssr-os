@@ -32,4 +32,10 @@
       script:
         - cd /home/gitlab-runner/$CI_PROJECT_NAME/
         - sudo mv site/* /var/www/base/docs/"$DIR_NAME"
+    cleanup_config:
+      tags:
+        - mkdocs
+      stage: cleanup
+      script:
         - sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME
+      when: always
