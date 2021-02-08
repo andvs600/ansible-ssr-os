@@ -1,5 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/D34m0nN0n3/ansible-ssr-os/issues)
+[![pipeline status](http://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os/badges/master/pipeline.svg)](http://gitlab-lb-01.gvc.oao.rzd/d34m0nn0n3/ansible-ssr-os/-/commits/master)
 [![HitCount](http://hits.dwyl.com/D34m0nN0n3/ansible-ssr-os.svg)](http://hits.dwyl.com/D34m0nN0n3/ansible-ssr-os)
 
 # Configure RHEL/CentOS
