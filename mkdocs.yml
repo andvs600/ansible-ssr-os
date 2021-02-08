@@ -34,7 +34,7 @@ plugins:
         verbose: true
         media_type: print
         combined: true
-        combined_output_path: pdf/combined.pdf
+        combined_output_path: pdf/
         theme_handler_path: theme-handler/material.py
 
 theme:
