@@ -34,7 +34,7 @@ plugins:
         verbose: true
         media_type: print
         combined: true
-        combined_output_path: 'pdf/Настройка_сервера_на_базе_OC_RHEL/CentOS.pdf'
+        combined_output_path: 'pdf/Настройка_сервера_на_базе_OC_RHEL&CentOS.pdf'
         theme_handler_path: theme-handler/material.py
 
 theme:
