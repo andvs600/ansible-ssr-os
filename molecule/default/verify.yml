@@ -1,9 +1,9 @@
 ---
-- name: Verify
-  hosts: all
-  gather_facts: false
+#- name: Verify
+#  hosts: all
+#  gather_facts: false
 
-  tasks:
+#  tasks:
 #    - include_role:
 #        name: '{{ run_role }}'
 ...
