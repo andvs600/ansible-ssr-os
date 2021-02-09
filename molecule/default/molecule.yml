@@ -54,6 +54,10 @@ provisioner:
       callback_whitelist: profile_tasks, timer, yaml
     ssh_connection:
       pipelining: false
+    privilege_escalation:
+      become: True
+      become_method: sudo
+      become_user: root
 verifier:
   name: ansible
 lint: |
