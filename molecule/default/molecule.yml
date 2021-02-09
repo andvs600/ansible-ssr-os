@@ -47,7 +47,6 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_CONFIG: "../../ansible.cfg"
-    ANSIBLE_ROLES_PATH: "../../roles/"
   config_options:
     defaults:
       interpreter_python: auto_silent
