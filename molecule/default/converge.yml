@@ -2,6 +2,7 @@
 - name: Converge
   hosts: all
   gather_facts: true
+  remote_user: root
 
   tasks:
     - include_role:
