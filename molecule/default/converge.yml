@@ -5,17 +5,8 @@
 
   tasks:
     - include_role:
-        name: '{{ run_role }}'
-      loop:
-        - 'infra-system.linux.os.ntp'
-        - 'infra-system.linux.os.auditd'
-        - 'infra-system.linux.os.sysconfig'
-        - 'infra-system.linux.os.sshd'
-        - 'infra-system.linux.os.cockpit'
-        - 'infra-system.linux.os.users'
-        - 'infra-system.linux.os.mpuser'
-        - 'infra-system.linux.os.firewall'
-        - 'infra-system.linux.os.selinux'
-      loop_control:
-        loop_var: run_role
+        name: 'infra-system.linux.os.ntp'
+
+    - include_role:
+        name: infra-system.linux.os.auditd
 ...
