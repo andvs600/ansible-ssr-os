@@ -47,9 +47,9 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_CONFIG: ../../ansible.cfg
-    ANSIBLE_ROLES_PATH: "../../roles"
   config_options:
     defaults:
+      roles_path: ../../roles
       interpreter_python: auto_silent
       callback_whitelist: profile_tasks, timer, yaml
     ssh_connection:
