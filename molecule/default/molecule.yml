@@ -46,8 +46,8 @@ platforms:
 provisioner:
   name: ansible
   env:
-    ANSIBLE_CONFIG: ../../ansible.cfg
-    ANSIBLE_ROLES_PATH: $ephemeral_directory/roles/:$project_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles
+    ANSIBLE_CONFIG: "../../ansible.cfg"
+    ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
   config_options:
     defaults:
       interpreter_python: auto_silent
