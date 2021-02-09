@@ -6,7 +6,7 @@ driver:
   name: podman
 platforms:
   - name: centos7
-    image: geerlingguy/docker-centos7-ansible:latest
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest
     privileged: true
     pre_build_image: true
     tmpfs:
@@ -14,7 +14,7 @@ platforms:
       - /tmp
     command: "/usr/sbin/init"
   - name: centos8
-    image: geerlingguy/docker-centos8-ansible:latest
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-centos8}-ansible:latest
     privileged: true
     pre_build_image: true
     tmpfs:
@@ -47,7 +47,7 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_CONFIG: "../../ansible.cfg"
-    ANSIBLE_ROLES_PATH: "$ephemeral_directory/roles/:$project_directory/roles/:$project_directory/../:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
+    ANSIBLE_ROLES_PATH: "../../roles/"
   config_options:
     defaults:
       interpreter_python: auto_silent
