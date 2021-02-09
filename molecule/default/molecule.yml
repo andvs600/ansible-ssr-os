@@ -8,17 +8,29 @@ platforms:
   - name: centos7
     image: docker.io/pycontribs/centos:7
     command: ""
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
     pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+    command: "/usr/sbin/init"
   - name: centos8
     image: docker.io/pycontribs/centos:8
     command: ""
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     privileged: true
     pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+    command: "/usr/sbin/init"
 #  - name: centos8
 #    image: nexus.rzd/rzdbaseimages/molecule-systemd-centos:8.001
 #    pre_build_image: true
