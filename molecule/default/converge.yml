@@ -5,8 +5,8 @@
   become: true
 
   roles:
-    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/{{ run_role }}"
-      loop:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/{{ item }}"
+      with_items:
         - 'infra-system.linux.os.ntp'
         - 'infra-system.linux.os.auditd'
         - 'infra-system.linux.os.sysconfig'
@@ -14,6 +14,4 @@
         - 'infra-system.linux.os.cockpit'
         - 'infra-system.linux.os.firewall'
         - 'infra-system.linux.os.selinux'
-      loop_control:
-        loop_var: run_role
 ...
