@@ -4,9 +4,8 @@
   gather_facts: true
   become: true
 
-  tasks:
-    - include_role:
-        name: '{{ run_role }}'
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/{{ run_role }}"
       loop:
         - 'infra-system.linux.os.ntp'
         - 'infra-system.linux.os.auditd'

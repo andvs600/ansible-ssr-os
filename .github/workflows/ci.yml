@@ -29,16 +29,15 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install -r requirements.txt
 
-      - name: t1
-        run: echo $HOME
+#      - name: t1
+#        run: echo $HOME
 
-      - name: t2
-        run: ls -l /home/runner/work/ansible-ssr-os/ansible-ssr-os/
+#      - name: t2
+#        run: ls -l /home/runner/work/ansible-ssr-os/ansible-ssr-os/
 
-#      - name: Run Molecule tests.
-#        run: molecule test
-#        env:
-#          PY_COLORS: '1'
-#          ANSIBLE_FORCE_COLOR: '1'
-#          ANSIBLE_ROLES_PATH: '../../roles/'
-#          MOLECULE_DISTRO: ${{ matrix.distro }}
+      - name: Run Molecule tests.
+        run: molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}
