@@ -50,6 +50,7 @@ provisioner:
       roles_path: /home/runner/work/ansible-ssr-os/ansible-ssr-os/roles
       interpreter_python: auto_silent
       callback_whitelist: profile_tasks, timer, yaml
+    privilege_escalation: {}
     ssh_connection:
       pipelining: false
 verifier:
