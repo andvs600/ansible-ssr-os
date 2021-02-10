@@ -1,8 +1,9 @@
     stages:
-      - cleanup
+      - pre
       - clone
       - build
       - deploy
+      - post
     variables:
       DIR_NAME: "Ansible Roles"
 
