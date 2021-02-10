@@ -8,13 +8,13 @@
     - include_role:
         name: '{{ run_role }}'
       loop:
-        - '../../roles/infra-system.linux.os.ntp'
-        - '../../roles/infra-system.linux.os.auditd'
-        - '../../roles/infra-system.linux.os.sysconfig'
-        - '../../roles/infra-system.linux.os.sshd'
-        - '../../roles/infra-system.linux.os.cockpit'
-        - '../../roles/infra-system.linux.os.firewall'
-        - '../../roles/infra-system.linux.os.selinux'
+        - 'infra-system.linux.os.ntp'
+        - 'infra-system.linux.os.auditd'
+        - 'infra-system.linux.os.sysconfig'
+        - 'infra-system.linux.os.sshd'
+        - 'infra-system.linux.os.cockpit'
+        - 'infra-system.linux.os.firewall'
+        - 'infra-system.linux.os.selinux'
       loop_control:
         loop_var: run_role
 ...

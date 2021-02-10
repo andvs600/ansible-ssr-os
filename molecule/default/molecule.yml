@@ -45,8 +45,6 @@ platforms:
 #    command: "/usr/sbin/init"
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_ROLES_PATH: /home/runner/work/ansible-ssr-os/ansible-ssr-os/roles
   options:
     vvv: True
   config_options:
