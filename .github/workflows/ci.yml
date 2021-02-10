@@ -33,10 +33,7 @@ jobs:
         run: echo $HOME
 
       - name: t2
-        run: ls -lR /home/runner
-
-      - name: t3
-        run: echo $MOLECULE_PROJECT_DIRECTORY
+        run: ls -l /home/runner/work/ansible-ssr-os/ansible-ssr-os/
 
 #      - name: Run Molecule tests.
 #        run: molecule test

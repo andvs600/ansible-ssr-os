@@ -11,8 +11,8 @@
         - mkdocs
       stage: cleanup
       script:
-        - if [ -d /var/www/base/docs/"$DIR_NAME" ]; then rm -rf /home/gitlab-runner/$CI_PROJECT_NAME; fi
-        - if [ -d /home/gitlab-runner/$CI_PROJECT_NAME ]; then rm -rf /home/gitlab-runner/$CI_PROJECT_NAME; fi
+        - if [ -d /var/www/base/docs/"$DIR_NAME" ]; then sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME; fi
+        - if [ -d /home/gitlab-runner/$CI_PROJECT_NAME ]; then sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME; fi
     clone_config:
       tags:
         - mkdocs
