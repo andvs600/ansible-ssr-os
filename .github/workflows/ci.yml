@@ -33,7 +33,7 @@ jobs:
         run: echo $HOME
 
       - name: t2
-        run: echo $ANSIBLE_ROLES_PATH
+        run: ls -lR /home/runner
 
       - name: t3
         run: echo $MOLECULE_PROJECT_DIRECTORY
