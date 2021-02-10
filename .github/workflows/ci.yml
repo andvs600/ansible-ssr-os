@@ -29,10 +29,19 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install -r requirements.txt
 
-      - name: Run Molecule tests.
-        run: molecule test
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          ANSIBLE_ROLES_PATH: '../../roles/'
-          MOLECULE_DISTRO: ${{ matrix.distro }}
+      - name: t1
+        run: echo $HOME
+
+      - name: t2
+        run: echo $ANSIBLE_ROLES_PATH
+
+      - name: t3
+        run: echo $MOLECULE_PROJECT_DIRECTORY
+
+#      - name: Run Molecule tests.
+#        run: molecule test
+#        env:
+#          PY_COLORS: '1'
+#          ANSIBLE_FORCE_COLOR: '1'
+#          ANSIBLE_ROLES_PATH: '../../roles/'
+#          MOLECULE_DISTRO: ${{ matrix.distro }}
