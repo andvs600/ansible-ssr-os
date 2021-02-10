@@ -45,10 +45,9 @@ platforms:
 #    command: "/usr/sbin/init"
 provisioner:
   name: ansible
-  env:
-    ANSIBLE_CONFIG: "../../ansible.cfg"
   config_options:
     defaults:
+      roles_path: /home/runner/work/ansible-ssr-os/ansible-ssr-os/roles
       interpreter_python: auto_silent
       callback_whitelist: profile_tasks, timer, yaml
     ssh_connection:
