@@ -29,12 +29,6 @@ jobs:
       - name: Install test dependencies.
         run: pip3 install -r requirements.txt
 
-      - name: Create dir for tests roles
-        run: mkdir ~/work/ansible-ssr-os/ansible-ssr-os/molecule/default/roles
-
-      - name: Create symbolic link for roles
-        run: for SROLE in $(ls -th ~/work/ansible-ssr-os/ansible-ssr-os/roles); do ln -sf ~/work/ansible-ssr-os/ansible-ssr-os/roles/${SROLE} ~/work/ansible-ssr-os/ansible-ssr-os/molecule/default/roles/${SROLE}; done
-
       - name: Run Molecule tests.
         run: molecule test
         env:

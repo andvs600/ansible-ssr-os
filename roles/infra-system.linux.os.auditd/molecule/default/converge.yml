@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: "Include infra-system.linux.os.auditd"
+      include_role:
+        name: "infra-system.linux.os.auditd"
+...
