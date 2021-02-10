@@ -6,10 +6,10 @@
     variables:
       DIR_NAME: "Ansible Roles"
 
-    pre_cleanup:
+    cleanup_pre:
       tags:
         - mkdocs
-      stage: cleanup
+      stage: pre
       script:
         - if [ -d /home/gitlab-runner/$CI_PROJECT_NAME ]; then sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME; fi
     clone_config:
@@ -32,10 +32,10 @@
       script:
         - cd /home/gitlab-runner/$CI_PROJECT_NAME/
         - sudo mv site/* /var/www/base/docs/"$DIR_NAME"
-    post_cleanup:
+    cleanup_post:
       tags:
         - mkdocs
-      stage: cleanup
+      stage: post
       script:
         - sudo rm -rf /home/gitlab-runner/$CI_PROJECT_NAME
       when: always
