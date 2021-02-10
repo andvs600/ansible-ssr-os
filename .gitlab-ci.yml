@@ -6,7 +6,7 @@
     variables:
       DIR_NAME: "Ansible Roles"
 
-    cleanup_config:
+    cleanup_pre:
       tags:
         - mkdocs
       stage: cleanup
@@ -32,7 +32,7 @@
       script:
         - cd /home/gitlab-runner/$CI_PROJECT_NAME/
         - sudo mv site/* /var/www/base/docs/"$DIR_NAME"
-    cleanup_config:
+    cleanup_post:
       tags:
         - mkdocs
       stage: cleanup

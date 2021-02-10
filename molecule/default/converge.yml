@@ -5,13 +5,10 @@
   become: true
 
   roles:
-    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/{{ item }}"
-      with_items:
-        - 'infra-system.linux.os.ntp'
-        - 'infra-system.linux.os.auditd'
-        - 'infra-system.linux.os.sysconfig'
-        - 'infra-system.linux.os.sshd'
-        - 'infra-system.linux.os.cockpit'
-        - 'infra-system.linux.os.firewall'
-        - 'infra-system.linux.os.selinux'
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.ntp"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.auditd"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.sysconfig"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.sshd"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.cockpit"
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}/roles/infra-system.linux.os.selinux"
 ...
