@@ -1,2 +1,1 @@
-2021-03-15 12:38:11,577 p=2504 u=root n=ansible | ERROR! Decryption failed (no vault secrets were found that could decrypt) for /root/ansible-ssr-os/roles/infra-system.linux.os.users/vars/main.yml
-2021-03-15 12:38:19,074 p=2509 u=root n=ansible | ERROR! Decryption failed (no vault secrets were found that could decrypt) for /root/ansible-ssr-os/roles/infra-system.linux.os.users/vars/main.yml
+
