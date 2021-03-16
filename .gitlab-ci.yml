@@ -5,7 +5,7 @@
       - deploy
       - post
     variables:
-      DIR_NAME: "Ansible Roles"
+      DIR_NAME: "Использование Ansible Roles для управления ОС RHEL/CentOS"
 
     cleanup_pre:
       tags:
