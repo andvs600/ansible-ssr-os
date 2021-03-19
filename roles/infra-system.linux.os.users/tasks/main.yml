@@ -19,6 +19,15 @@
     password: "{{ root_pass }}"
     update_password: always
   when: (root_mgmt is defined) and (root_mgmt | bool == true)
+  no_log: True
+
+- name: Set authorized key taken for root
+  authorized_key:
+    user: root
+    state: present
+    key: "{{ adminos_key }}"
+    when: adminos_key is defined
+  no_log: True
   tags:
     - root_mgmt
 
@@ -32,13 +41,15 @@
         update_password: always
         shell: /bin/bash
         comment: 'For administrators infrastructure'
-        
+      no_log: True
+
     - name: Set authorized key taken for adminos
       authorized_key:
         user: adminos
         state: present
         key: "{{ adminos_key }}"
       when: adminos_key is defined
+      no_log: True
 
     - name: Add rure for adminos account and validate the sudoers file before saving
       lineinfile:
@@ -107,13 +118,15 @@
         update_password: always
         shell: /bin/bash
         comment: 'For administrators asu'
-        
+      no_log: True
+
     - name: Set authorized key taken for adminptk
       authorized_key:
         user: adminptk
         state: present
         key: "{{ adminptk_key }}"
       when: adminptk_key is defined
+      no_log: True
 
     - name: Copy vimrc
       template:
@@ -158,14 +171,16 @@
         update_password: always
         shell: /bin/bash
         comment: 'For shift staff'
+      no_log: True
       tags:
         - smena_mgmt
-        
+
     - name: Set authorized key taken for smenaptk
       authorized_key:
         user: smenaptk
         state: present
         key: "{{ smenaptk_key }}"
+      no_log: True
       tags:
         - smena_mgmt
 
@@ -213,9 +228,10 @@
         update_password: always
         home: /home/adminvp
         comment: 'For developers administrators'
+      no_log: True
       tags:
         - adminvp0_mgmt
-        
+
     - name: Account adminvp1
       user:
         name: adminvp1
@@ -225,9 +241,10 @@
         create_home: no
         home: /home/adminvp
         comment: 'For developers administrators'
+      no_log: True
       tags:
         - adminvp_mgmt
-         
+
     - name: Account adminvp2
       user:
         name: adminvp2
@@ -237,9 +254,10 @@
         create_home: no
         home: /home/adminvp
         comment: 'For developers administrators'
+      no_log: True
       tags:
         - adminvp_mgmt
-       
+
     - name: Add sudoers rules
       template:
         force: yes

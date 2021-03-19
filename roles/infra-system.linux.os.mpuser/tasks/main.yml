@@ -20,6 +20,7 @@
     groups: systemd-journal
     shell: /bin/bash
     comment: 'User for MaxPatrol vulnerability scanner'
+  no_log: True
   tags: mp_user
 
 - name: Set authorized key taken for <mpuser>
@@ -27,6 +28,7 @@
     user: mpuser
     state: present
     key: "{{ mpuser_key }}"
+  no_log: True
 
 - name: Sudo rules
   block:
