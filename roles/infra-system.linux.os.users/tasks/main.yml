@@ -102,7 +102,7 @@
           [[ -z "$TMUX" ]] && (tmux attach -t default || (tmux start-server \; source ~/.tmux.conf && tmux attach -t default))
       tags:
         - tmux
-        - tmux_conf      
+        - tmux_conf
         
   when: (adminos_mgmt is defined) and (adminos_mgmt | bool == true)
   tags:
@@ -267,3 +267,15 @@
       tags:
         - sudoers_mgmt
   when: (adminvp_smena_mgmt is defined) and (adminvp_smena_mgmt | bool == true)
+
+- name: Group for developers accounts
+  group:
+    name: developers
+    state: present
+
+- name: Add rure for developers group accounts and validate the sudoers file before saving
+  lineinfile:
+    path: /etc/sudoers.d/developers
+    state: present
+    line: '%developers   ALL=(ALL)  ALL'
+    validate: /usr/sbin/visudo -cf %s
