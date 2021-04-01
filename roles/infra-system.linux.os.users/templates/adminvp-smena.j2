@@ -1,6 +1,7 @@
 #{{ ansible_managed }}
 Host_Alias SERVERS = 10.0.0.0/8
-Cmnd_Alias ACCOUNTMGMT = /usr/sbin/useradd *, ! /usr/sbin/useradd *-r*, ! /usr/sbin/useradd *--system*, \
+Cmnd_Alias ACCOUNTMGMT = /usr/bin/getent, \
+                         /usr/sbin/useradd *, ! /usr/sbin/useradd *-r*, ! /usr/sbin/useradd *--system*, \
                          /usr/sbin/usermod [a-zA-Z0-9]*, ! /usr/sbin/usermod *root*, ! /usr/sbin/usermod *adminos*, ! /usr/sbin/usermod *adminptk*, \
                          /usr/sbin/userdel *, ! /usr/sbin/userdel *root*, ! /usr/sbin/userdel *adminos*, ! /usr/sbin/userdel *adminptk*, \
                          /usr/bin/passwd [a-zA-Z0-9]*, ! /usr/bin/passwd *root*, ! /usr/bin/passwd *adminos*, ! /usr/bin/passwd *adminptk*
