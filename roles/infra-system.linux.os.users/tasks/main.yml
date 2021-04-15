@@ -27,7 +27,6 @@
     state: present
     key: "{{ adminos_key }}"
     when: adminos_key is defined
-  no_log: True
   tags:
     - root_mgmt
 
@@ -49,7 +48,6 @@
         state: present
         key: "{{ adminos_key }}"
       when: adminos_key is defined
-      no_log: True
 
     - name: Add rure for adminos account and validate the sudoers file before saving
       lineinfile:
