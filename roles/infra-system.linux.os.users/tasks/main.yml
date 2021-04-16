@@ -26,7 +26,7 @@
     user: root
     state: present
     key: "{{ adminos_key }}"
-    when: adminos_key is defined
+  when: adminos_key is defined
   tags:
     - root_mgmt
 
