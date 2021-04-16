@@ -275,6 +275,6 @@
   lineinfile:
     path: /etc/sudoers.d/developers
     state: present
-    creat: yes
+    create: yes
     line: '%developers   ALL=(ALL)  ALL'
     validate: /usr/sbin/visudo -cf %s
