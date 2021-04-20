@@ -1,6 +1,7 @@
 ---
-  root_mgmt: false 
-  adminos_mgmt: false 
-  adminptk_mgmt: false 
-  adminvp_smena_mgmt: false 
-  lock_pass: yes
+root_mgmt: false
+adminos_mgmt: false
+adminptk_mgmt: false
+adminvp_smena_mgmt: false
+smenaptk_automenu: false
+lock_pass: yes
