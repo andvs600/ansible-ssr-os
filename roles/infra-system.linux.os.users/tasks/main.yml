@@ -201,6 +201,14 @@
         - tmux_smenaptk
         - tmux_conf
 
+    - name: Remove auto startup menu for user smenaptk
+      replace:
+        path: '/home/smenaptk/.bashrc'
+        regexp: '\&{2}\s\$\{HOME\}\/\.menu'
+        replace: ''
+        backup: yes
+      when: (smenaptk_automenu is defined) and (smenaptk_automenu | bool == false)
+
     - name: Add start Tmux in bashrc
       blockinfile:
         path: /home/smenaptk/.bashrc
