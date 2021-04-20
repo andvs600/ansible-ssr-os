@@ -20,27 +20,28 @@
     По умолчанию SSH ключи пароли уже заданы и передается как шифрованный секрет. Переопределяются с помощью переменных.
 
 ## Параметры
-|Название переменной  | Тип переменной | Значения по умолчанию | Описание                                                                                      |
-|:--------------------|:--------------:|:---------------------:|:----------------------------------------------------------------------------------------------|
-|root_mgmt            | boolean        | undef (false)         | Включает управление УЗ *root'a*.                                                              |
-|root_pass            | string         | def in var vauit      | Устанавливает пароль *root'у*, зависит от переменной. Обновится , если они отличаются.        |
-|adminos_mgmt         | boolean        | undef (false)         | Включает управление УЗ *adminos*.                                                             |
-|adminos_pass         | string         | def in var vauit      | Устанавливает пароль *adminos*, зависит от переменной. Обновится , если они отличаются.       |
-|adminos_key          | string         | def in var vauit      | Создает ключ авторизации *adminos*, зависит от переменной. Обновится , если они отличаются.   |
-|adminptk_mgmt        | boolean        | undef (false)         | Включает управление УЗ *adminptk*.                                                            |
-|adminptk_pass        | string         | def in var vauit      | Устанавливает пароль *adminptk*, зависит от переменной. Обновится , если они отличаются.      |
-|adminptk_key         | string         | undef (false)         | Создает ключ авторизации *adminptk*, зависит от переменной. Обновится , если они отличаются.  |
-|adminptk_tmux        | boolean        | undef (false)         | Активирует Tmux для УЗ *adminptk*.                                                            |
-|adminvp_smena_mgmt   | boolean        | undef                 | Включает управление УЗ *adminvp0, adminvp1, adminvp2, smenaptk*.                              |
-|smenaptk_pass        | string         | def in var vauit      | Устанавливает пароль *smenaptk*, зависит от переменной. Обновится , если они отличаются.      |
-|smenaptk_key         | string         | def in var vauit      | Создает ключ авторизации *smenaptk*, зависит от переменной. Обновится , если они отличаются.  |
-|smenaptk_tmux        | boolean        | undef                 | Активирует Tmux для УЗ *smenaptk*.                                                            |
-|adminvp0_pass        | string         | def in var vauit      | Устанавливает пароль *adminvp0*, зависит от переменной. Обновится , если они отличаются.      |
-|lock_pass            | boolean        | undef (false)         | Блокирует или разблокирует УЗ *adminvp0*.                                                     |
-|adminvp_pass         | string         | def in var vauit      | Устанавливает пароль *adminvp[1,2]*, не обновляется при изменение переменной.                 |
-|sudo_services_drive  | array          | undef                 | Список сервисов (служб) которыми можно управлять.                                             |
-|sudo_services_boot   | array          | undef                 | Список сервисов (служб) которые можно автоматически запускать.                                |
-|srules_custom        | string         | undef                 | Дополнительные правила.                                                                       |
+|Название переменной  | Тип переменной | Значения по умолчанию | Описание                                                                                        |
+|:--------------------|:--------------:|:---------------------:|:------------------------------------------------------------------------------------------------|
+|root_mgmt            | boolean        | undef (false)         | Включает управление УЗ *root'a*.                                                                |
+|root_pass            | string         | def in var vauit      | Устанавливает пароль *root'у*, зависит от переменной. Обновится , если они отличаются.          |
+|adminos_mgmt         | boolean        | undef (false)         | Включает управление УЗ *adminos*.                                                               |
+|adminos_pass         | string         | def in var vauit      | Устанавливает пароль *adminos*, зависит от переменной. Обновится , если они отличаются.         |
+|adminos_key          | string         | def in var vauit      | Создает ключ авторизации *adminos*, зависит от переменной. Обновится , если они отличаются.     |
+|adminptk_mgmt        | boolean        | undef (false)         | Включает управление УЗ *adminptk*.                                                              |
+|adminptk_pass        | string         | def in var vauit      | Устанавливает пароль *adminptk*, зависит от переменной. Обновится , если они отличаются.        |
+|adminptk_key         | string         | undef (false)         | Создает ключ авторизации *adminptk*, зависит от переменной. Обновится , если они отличаются.    |
+|adminptk_tmux        | boolean        | undef (false)         | Активирует Tmux для УЗ *adminptk*.                                                              |
+|adminvp_smena_mgmt   | boolean        | undef                 | Включает управление УЗ *adminvp0, adminvp1, adminvp2, smenaptk*.                                |
+|smenaptk_pass        | string         | def in var vauit      | Устанавливает пароль *smenaptk*, зависит от переменной. Обновится , если они отличаются.        |
+|smenaptk_key         | string         | def in var vauit      | Создает ключ авторизации *smenaptk*, зависит от переменной. Обновится , если они отличаются.    |
+|smenaptk_tmux        | boolean        | undef                 | Активирует Tmux для У *smenaptk*.                                                               |
+|smenaptk_automenu    | boolean        | undef (false)         | Пропускает отключение доббавленного через `kickstart` вызова меню при логоне для УЗ *smenaptk*. |
+|adminvp0_pass        | string         | def in var vauit      | Устанавливает пароль *adminvp0*, зависит от переменной. Обновится , если они отличаются.        |
+|lock_pass            | boolean        | undef (false)         | Блокирует или разблокирует УЗ *adminvp0*.                                                       |
+|adminvp_pass         | string         | def in var vauit      | Устанавливает пароль *adminvp[1,2]*, не обновляется при изменение переменной.                   |
+|sudo_services_drive  | array          | undef                 | Список сервисов (служб) которыми можно управлять.                                               |
+|sudo_services_boot   | array          | undef                 | Список сервисов (служб) которые можно автоматически запускать.                                  |
+|srules_custom        | string         | undef                 | Дополнительные правила.                                                                         |
 
 !!! attention
     Пароли шифруются хеш функцией sha-512, в переменной указывается ее значение. Подробно описано здесь: [how-do-i-generate-encrypted-passwords-for-the-user-module](https://docs.ansible.com/ansible/latest/reference_appendices/faq.html#how-do-i-generate-encrypted-passwords-for-the-user-modul)
